@@ -1,5 +1,5 @@
 .outerContainer {
-    background-color: purple;
+    background-color: #fbfbfb;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,9 +9,9 @@
 .navbar {
     width: 95%;
     margin-top: 2vh;
-    padding: 1vh;
+    padding: 1.5vh;
     height: 10vh;
-    background-color: pink;
+    background-color: #F0F0F0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -19,6 +19,16 @@
     border-radius: 20vh;
 
 }
+
+.navbar button {
+    padding: 1vh 1vw;
+    background-color: #1877F2;
+    color: white;
+    border-radius: 2vw;
+    border: 1px solid #1877F2;
+    cursor: pointer;
+}
+
 
 .container {
     display: flex;
@@ -30,33 +40,53 @@
 
 }
 
+.signup-div button {
+    padding: 1vh 1vw;
+    background-color: #1877F2;
+    color: white;
+    border-radius: 2vw;
+    border: 1px solid #1877F2;
+    margin-bottom: 2vh;
+    cursor: pointer;
+}
+
 
 .headingText {
     width: 20vw;
     height: 15vh;
-    background-color: green;
     text-align: center;
+    margin-top: 2vh;
+}
+
+.img-div-mob {
+    display: none;
 }
 
 .second-headingText {
-
     width: 60vw;
-    background-color: green;
     text-align: center;
 }
 
-.inner-second {
-    background-color: green;
-    width: 60vw;
-    display: flex;
-
+.second-headingText h3 {
+    font-weight: 600;
 }
 
+.second-headingText h5 {
+    font-weight: 400;
+}
+
+.inner-second {
+    width: 60vw;
+    display: flex;
+}
+
+
+
 .list-text {
-    font-size: 2.5vh;
+    margin-top: 4vh;
+    font-size: 3vh;
     width: 60%;
-    background-color: red;
-    gap: 2vh;
+    gap: 6vh;
 }
 
 .list-text h4 {
@@ -96,7 +126,6 @@ ul {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: palegreen;
     height: 20vh;
 }
 
@@ -109,7 +138,6 @@ ul {
 }
 
 .third-down {
-    background-color: khaki;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -137,6 +165,11 @@ ul {
     gap: 1vh;
 }
 
+.first-box h3,
+h5 {
+    font-weight: 400;
+}
+
 .round-blue {
     border-radius: 50%;
     background-color: blue;
@@ -157,7 +190,7 @@ ul {
     align-items: center;
     width: 70vw;
     height: 40vh;
-    background-color: green;
+
     gap: 1vw;
 }
 
@@ -167,22 +200,385 @@ ul {
 }
 
 .apps-logo-box {
+
     display: flex;
-    justify-content: center;
     gap: 0.5vw;
     width: 20vw;
     height: 12vh;
-    background-color: red;
 }
 
 .about {
+    padding: 3vh 2vw;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2vw;
+    box-shadow: 2px -2px 2px 10px #e3edfa
+}
+
+.about-top {
     display: flex;
     align-items: center;
     justify-items: center;
+    width: 70vw;
+    height: 40vh;
+    gap: 4vw;
+}
+
+.login-btn {
+    padding: 1vw 2vw;
+    border: 0px solid #EFF0EC;
+    border-radius: 0;
+    width: 5vw;
+    cursor: pointer;
+
+}
+
+.signup-btn {
+    width: 6vw;
+    padding: 1vh 1vw;
+    background-color: #1877F2;
+    color: white;
+    border-radius: 2vw;
+    border: 1px solid #1877F2;
+    cursor: pointer;
+}
+
+.text-about {
+    width: 15vw;
+    font-size: 3vh;
 }
 
 .about button {
     padding: 1vh 1vh;
     border-radius: 3vw;
+    margin-right: 1vw;
+}
+
+.about-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media (max-width:426px) {
+    .outerContainer {
+        background-color: #fbfbfb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navbar {
+        width: 95%;
+        margin-top: 2vh;
+        padding: 1vh;
+        height: 7vh;
+        background-color: #D9D9D9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px thin black;
+        border-radius: 20vh;
+
+    }
+
+    .navbar button {
+        padding: 1vh 5vw;
+        background-color: #1877F2;
+        color: white;
+        border-radius: 7vw;
+        border: 1px solid #1877F2;
+        cursor: pointer;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1vh;
+        justify-content: center;
+        padding: 2vw 2vw;
+
+    }
+
+    .signup-div button {
+        padding: 1vh 1vw;
+        background-color: #1877F2;
+        color: white;
+        border-radius: 2vw;
+        border: 1px solid #1877F2;
+        margin-bottom: 2vh;
+        cursor: pointer;
+    }
+
+
+    .headingText {
+        width: fit-content;
+        height: 10vh;
+        text-align: center;
+        margin-top: 2vh;
+    }
+
+
+    .img-div {
+        display: none;
+    }
+
+    .img-div-mob {
+        width: fit-content;
+        height: fit-content;
+        display: block;
+    }
+
+
+    .second-headingText {
+        width: 80vw;
+        text-align: center;
+    }
+
+    .second-headingText h3 {
+        font-weight: 600;
+    }
+
+    .second-headingText h5 {
+        font-weight: 300;
+    }
+
+    .inner-second {
+        width: 80vw;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+    .list-text {
+        margin-top: 2vh;
+        font-size: 2vh;
+        width: 90%;
+        gap: 6vh;
+    }
+
+    .list-text h4 {
+        margin-top: 2vh;
+    }
+
+    ul {
+        font-weight: 400;
+        display: flex;
+        flex-direction: column;
+        gap: 4vh;
+        margin-top: 2vh;
+    }
+
+    .second-img-div {
+        position: relative;
+        width: fit-content;
+    }
+
+    .second-img-div img {
+        position: absolute;
+        width: 80vw;
+        margin-top: 2vh;
+    }
+
+    .second-img-div img:first-child {
+        position: relative;
+        /* cal1 (background) */
+        z-index: 1;
+    }
+
+    .second-img-div img:last-child {
+        z-index: 2;
+        /* cal2 on top */
+        top: 0;
+        left: 0;
+    }
+
+    .third-top {
+        margin-top: 7vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 20vh;
+    }
+
+    .third-top-left {
+        font-size: 3vh;
+        width: fit-content;
+        text-align: center;
+    }
+
+    .third-top-right {
+        display: none;
+        width: 30%;
+    }
+
+    .third-down {
+        width: 100%;
+        /* Ensures it spans the full width */
+        display: flex;
+        /* Enables row-wise arrangement */
+        flex-wrap: nowrap;
+        /* Prevents wrapping */
+        gap: 2vh;
+        padding: 1vh;
+        overflow-x: auto;
+        /* Enables horizontal scrolling */
+        white-space: nowrap;
+        /* Prevents items from breaking into new lines */
+        scrollbar-width: thin;
+        /* Optional: Custom scrollbar for better UX */
+    }
+
+    /* Hide scrollbar in Webkit browsers */
+    .third-down::-webkit-scrollbar {
+        height: 5px;
+        /* Adjust scrollbar height */
+    }
+
+    .third-down::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        /* Scrollbar thumb color */
+        border-radius: 5px;
+    }
+
+    .first-row {
+        display: flex;
+        align-items: center;
+        gap: 2vw;
+    }
+
+    .first-box {
+        width: 70vw;
+        /* Ensures each box has enough width */
+        height: auto;
+        flex-direction: column;
+        /* Center content */
+        justify-content: center;
+        border-radius: 3vw;
+        background-color: #DEDEDE;
+        display: flex;
+        gap: 1vh;
+        word-wrap: break-word;
+        /* Ensures text wraps properly */
+        overflow: hidden;
+        /* Prevents text overflow */
+    }
+
+    .first-box h3,
+    h5 {
+
+        text-align: center;
+        font-weight: 400;
+        font-size: 1vh;
+    }
+
+    .round-blue {
+        border-radius: 50%;
+        background-color: blue;
+        font-size: 1vh;
+        width: 2vw;
+        height: 2vw;
+    }
+
+    .first-box-bottom {
+        display: flex;
+        align-items: center;
+        gap: 1vh;
+    }
+
+    .app-heading {
+
+        text-align: center;
+    }
+
+    .apps-logo {
+        margin-top: 4vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80vw;
+        gap: 1vw;
+        height: fit-content;
+    }
+
+    .apps-logo-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1vw;
+    }
+
+    .apps-logo-box {
+        display: flex;
+        gap: 0.5vw;
+        width: 80vw;
+        height: 12vh;
+    }
+
+    .about {
+        margin-bottom: 5vh;
+        padding: 3vh 2vw;
+        display: flex;
+        flex-direction: column;
+        border-radius: 2vw;
+        box-shadow: 2px -2px 2px 10px #e3edfa
+    }
+
+    .about-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+        width: 70vw;
+        height: 40vh;
+        gap: 4vw;
+    }
+
+    .login-btn {
+        display: none;
+
+    }
+
+    .signup-btn {
+        width: 25vw;
+        padding: 1vh;
+        background-color: #1877F2;
+        color: white;
+        border-radius: 5vw;
+        border: 1px solid #1877F2;
+        cursor: pointer;
+    }
+
+    .text-about {
+        align-self: flex-start;
+        width: 25vw;
+        font-size: 3vh;
+    }
+
+    .text-about h6 {
+        font-size: 1.5vh;
+        font-weight: 600;
+    }
+
+    .about button {
+        padding: 1vh 1vh;
+        border-radius: 3vw;
+        margin-right: 1vw;
+    }
+
+
+    .about-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .about-bottom h5 {
+        display: none;
+    }
+
 
 }
