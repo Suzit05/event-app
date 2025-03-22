@@ -1,0 +1,22 @@
+.dashboard-outside-container {
+    background-color: palevioletred;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    max-height: fit-content;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.menu-container {
+    width: 25%;
+    height: 100vh;
+    background-color: blueviolet;
+}
+
+.screen-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #f3f3f1;
+}

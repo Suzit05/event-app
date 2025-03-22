@@ -1,0 +1,81 @@
+.menu-container {
+    width: 250px;
+    background: #f9f9f9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    border-right: 1px solid #ddd;
+}
+
+.menu-logo img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.menu-nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.menu-nav li {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    font-size: 16px;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-nav li i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.menu-nav li:hover,
+.menu-nav .active {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.menu-create-btn {
+    background: none;
+    border: 2px solid #007bff;
+    color: #007bff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.menu-create-btn:hover {
+    background: #007bff;
+    color: #fff;
+}
+
+.menu-profile {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 500;
+}

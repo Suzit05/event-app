@@ -14,18 +14,26 @@ import app7 from "../assets/images/app7.png"
 import app8 from "../assets/images/app8.png"
 import app9 from "../assets/images/app9.png"
 import cnnctlogo from "../assets/images/cnnctlogo.png"
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+    const navigate = useNavigate()
+    const handleSignup = () => {
+        navigate("/Signup") //see the path , not the name of the pages
+    }
+    const handleLogin = () => {
+        navigate("/Login")
+    }
     return (
         <div className='outerContainer'>
             <div className='navbar'>
                 <div><img src={cnnctlogo} alt="" /></div>
-                <div><button>Sign up free</button></div>
+                <div><button onClick={handleSignup}>Sign up free</button></div>
             </div>
             <div className='container'>
                 <div className='headingText'> <h1>CNNCT - Easy <br /> Scheduling ahead</h1>
                 </div>
-                <div className='signup-div'><button>Sign up free</button></div>
+                <div className='signup-div'><button onClick={handleSignup}>Sign up free</button></div>
                 <div className='img-div'><img src={home} alt="" /></div>
                 <div className='img-div-mob'><img src={homemob} alt="" /></div>
             </div>
@@ -161,8 +169,8 @@ const Home = () => {
                 <div className='about'>
                     <div className='about-top'>
                         <div>
-                            <button className='login-btn'>login</button>
-                            <button className='signup-btn'>signup free</button>
+                            <button onClick={handleLogin} className='login-btn'>login</button>
+                            <button onClick={handleSignup} className='signup-btn'>signup free</button>
                         </div>
 
 

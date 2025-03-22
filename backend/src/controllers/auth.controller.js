@@ -68,13 +68,15 @@ const login = async (req, res) => {
         if (!isPasswordCorrect) {
             return res.status(400).json({ message: "Invalid credentials" })
         }
-        generateToken(user._id, res)
+        // Generate Token
+        const token = generateToken(user._id, res);
 
         res.status(200).json({
             _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            token,  // 🔹 Send Token Here
 
         })
 
@@ -84,6 +86,28 @@ const login = async (req, res) => {
         res.status(400).json({ message: "Internal server error" })
     }
 }
+
+const about = async (req, res) => {
+    console.log("Received Headers:", req.headers); // Debugging
+
+    const { username } = req.body;
+    if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized - No user found" });
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            { username },
+            { new: true }
+        );
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error("Error updating username:", error.message);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 const logout = (req, res) => {
     //logout m cookie clear kr do
@@ -160,4 +184,4 @@ const checkAuth = (req, res) => {
 
 
 
-module.exports = { signup, login, logout, setting, checkAuth }
+module.exports = { signup, login, logout, setting, checkAuth, about }
