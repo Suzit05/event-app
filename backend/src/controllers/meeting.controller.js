@@ -61,17 +61,14 @@ const addEvent = async (req, res) => {
     }
 }
 
-// const addEvent2 = async (req, res) => {
-
-// }
 
 
-const getMeetings = async (req, res) => {
+const getMeetings = async (req, res) => { //api/meeting/getmeetings
     //get all meetings with their details
     try {
 
         // Fetch all meetings from the database
-        const meetings = await Meeting.find({}, "eventTopic startTime endTime duration date"); //fetch all with the selected fields
+        const meetings = await Meeting.find({}, "eventTopic startTime endTime duration date addLink"); //fetch all with the selected fields
 
         res.status(200).json(meetings);
     } catch (error) {

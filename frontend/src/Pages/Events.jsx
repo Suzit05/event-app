@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/Events.css";
 import { useNavigate } from "react-router-dom";
 
-//ek baar login krke dekno
-//events pr preventdefault lgao
-//sb menu k contnet bnao
+//this is create evvent in reality
 
 const Events = () => {
     const [eventId, setEventId] = useState(null); // ✅ Store eventId
@@ -22,7 +20,7 @@ const Events = () => {
 
     // Generate time options (every 30 mins from 9:00 AM to 11:30 PM)
     const timeOptions = [];
-    for (let hour = 9; hour <= 23; hour++) {
+    for (let hour = 1; hour <= 12; hour++) {
         timeOptions.push(`${hour.toString().padStart(2, "0")}:00`);
         timeOptions.push(`${hour.toString().padStart(2, "0")}:30`);
     }

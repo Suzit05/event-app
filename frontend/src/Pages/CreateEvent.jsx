@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "../styles/Dashboard.css";
+import "../styles/CreateEvent.css";
 import Menu from '../Components/Menu';
 import cnnctlogo from "../assets/images/cnnctlogo.png";
 import Events from './Events';
