@@ -46,7 +46,7 @@ const About = () => {
             setError("");
 
             setTimeout(() => {
-                navigate("/dashboard");
+                navigate("/create-event");
             }, 1500);
         } catch (error) {
             console.error("Error updating username:", error.response?.data || error);

@@ -4,7 +4,17 @@ const User = require("../models/user.model")
 const protectRoute = async (req, res, next) => {
     //check kro ki token h ya nhi
     try {
-        const token = req.cookies.jwt;
+        let token = req.cookies.jwt;
+        // 🔍 If no token in cookies, check the Authorization header
+        if (!token && req.headers.authorization?.startsWith("Bearer")) {
+            token = req.headers.authorization.split(" ")[1]; // Extract token from header
+        }
+        console.log("Token received:", req.cookies.jwt);
+        console.log("JWT Secret:", process.env.JWT_SECRET);
+
+
+
+
         if (!token) {
             return res.status(401).json({ message: "Unauthorized- No token available" })
         }

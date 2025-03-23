@@ -87,6 +87,15 @@ const login = async (req, res) => {
     }
 }
 
+
+const getuser = async (req, res) => {
+    try {
+        res.json({ firstName: req.user.firstName, lastName: req.user.lastName });
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 const about = async (req, res) => {
     console.log("Received Headers:", req.headers); // Debugging
 
@@ -184,4 +193,4 @@ const checkAuth = (req, res) => {
 
 
 
-module.exports = { signup, login, logout, setting, checkAuth, about }
+module.exports = { signup, login, logout, setting, checkAuth, about, getuser }

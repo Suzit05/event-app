@@ -8,9 +8,12 @@ const addEvent = async (req, res) => {
         const { eventTopic, meetingPassword, description, startTime, endTime, duration, addLink, addEmails, date } = req.body;
 
         // Check if all required fields are present
-        if (!eventTopic || !startTime || !endTime || !addLink || !addEmails || !date) {
+        if (!eventTopic || !startTime || !date || !addEmails || !addLink) {
             return res.status(400).json({ message: "Missing required fields" });
         }
+
+        // ✅ Generate unique eventId
+        const eventId = `EVT-${Date.now()}`;
 
         // Fetch user details to get hostName
         const user = await User.findById(req.user._id);
@@ -22,16 +25,16 @@ const addEvent = async (req, res) => {
 
         // Create new meeting/event
         const newMeeting = new Meeting({
+            eventId, // ✅ Store eventId
             eventTopic,
             meetingPassword,
             date,
             hostName,
-            description,
-            startTime,
-            endTime,
-            duration,
-            addLink,
             addEmails,
+            addLink, //t
+            startTime, //t
+            duration,
+
             user: req.user._id // Assuming user is authenticated and stored in req.user
         });
 
@@ -39,16 +42,17 @@ const addEvent = async (req, res) => {
         await newMeeting.save();
 
         res.status(201).json({
+            eventId: newMeeting.eventId,
             eventTopic: newMeeting.eventTopic,
             hostName: newMeeting.hostName,
             date: newMeeting.date,
             meetingPassword: newMeeting.meetingPassword,
             description: newMeeting.description,
             startTime: newMeeting.startTime,
-            endTime: newMeeting.endTime,
-            duration: newMeeting.duration,
-            addLink: newMeeting.addLink,
             addEmails: newMeeting.addEmails,
+            addLink: newMeeting.addLink,
+            duration: newMeeting.duration,
+
         });
 
     } catch (error) {
@@ -56,6 +60,11 @@ const addEvent = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+// const addEvent2 = async (req, res) => {
+
+// }
+
 
 const getMeetings = async (req, res) => {
     //get all meetings with their details

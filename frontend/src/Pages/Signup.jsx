@@ -101,7 +101,7 @@ const Signup = () => {
                 <div className='signup-form-container'>
                     <div className='signup-heading'>
                         <h1>Create an Account</h1>
-                        <h3>Sign-in instead</h3>
+                        <h3 onClick={() => navigate("/login")}>Sign-in instead</h3>
                     </div>
 
                     <form onSubmit={handleSubmit}>

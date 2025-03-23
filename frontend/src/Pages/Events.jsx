@@ -1,17 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Events.css";
+import { useNavigate } from "react-router-dom";
+
+//ek baar login krke dekno
+//events pr preventdefault lgao
+//sb menu k contnet bnao
 
 const Events = () => {
-    //backend se jodo............g/////////////////
+    const [eventId, setEventId] = useState(null); // ✅ Store eventId
     const [eventTopic, setEventTopic] = useState("");
     const [password, setPassword] = useState("");
-    const [hostName, setHostName] = useState("Sarthak Pal");
+    const [hostName, setHostName] = useState(""); // Empty initially
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
-    const [time, setTime] = useState("02:30");
-    const [period, setPeriod] = useState("PM");
+    const [starttime, setStartTime] = useState("09:00"); // Default start time
+    const [period, setPeriod] = useState("AM");
     const [timezone, setTimezone] = useState("(UTC +5:00 Delhi)");
     const [duration, setDuration] = useState("1 hour");
+    const [addLink, setaddLink] = useState("");
+    const [addEmails, setaddEmails] = useState("");
+
+    // Generate time options (every 30 mins from 9:00 AM to 11:30 PM)
+    const timeOptions = [];
+    for (let hour = 9; hour <= 23; hour++) {
+        timeOptions.push(`${hour.toString().padStart(2, "0")}:00`);
+        timeOptions.push(`${hour.toString().padStart(2, "0")}:30`);
+    }
+
+    // Fetch the authenticated user's name
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("http://localhost:5001/api/auth/user", {
+                    method: "GET",
+                    credentials: "include", // ✅ Send cookies with request
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setHostName(`${data.firstName} ${data.lastName}`);
+                } else {
+                    console.error("Error fetching user:", data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    const handleSaveEvent = async (e) => {
+        e.preventDefault() //reset form data
+        const durationMapping = { "30 mins": 0.5, "1 hour": 1 };
+
+        const eventData = {
+            eventTopic,
+            password,
+            hostName,
+            description,
+            date: new Date(date),
+            startTime: starttime,
+            duration: durationMapping[duration],
+            period,
+            addLink,
+            addEmails: addEmails.split(","), // Convert to an array
+            timezone,
+        };
+
+        try {
+            const response = await fetch("http://localhost:5001/api/meeting/addEvent", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(eventData),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert("Meeting created successfully!");
+                // ✅ Reset form fields after successful save
+                setEventTopic("");
+                setPassword("");
+                setDescription("");
+                setDate("");
+                setStartTime("09:00");
+                setPeriod("AM");
+                setTimezone("(UTC +5:00 Delhi)");
+                setDuration("1 hour");
+                setaddLink("");
+                setaddEmails("");
+
+            } else {
+                alert("Error: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to create meeting.");
+        }
+    };
 
     return (
         <div className="create-event-container">
@@ -21,7 +109,6 @@ const Events = () => {
                     Create events to share for people to book on your calendar.
                 </p>
             </div>
-
 
             <div className="create-event-card">
                 <h3 className="event-header">Add Event</h3>
@@ -48,10 +135,7 @@ const Events = () => {
 
                 <div className="form-group">
                     <label>Host Name <span className="required">*</span></label>
-                    <select value={hostName} onChange={(e) => setHostName(e.target.value)}>
-                        <option value="Sarthak Pal">Sarthak Pal</option>
-                        <option value="Other Host">Other Host</option>
-                    </select>
+                    <input type="text" value={hostName} readOnly />
                 </div>
 
                 <div className="form-group">
@@ -74,9 +158,10 @@ const Events = () => {
                     </div>
 
                     <div className="form-group">
-                        <select value={time} onChange={(e) => setTime(e.target.value)}>
-                            <option>02:30</option>
-                            <option>03:00</option>
+                        <select value={starttime} onChange={(e) => setStartTime(e.target.value)}>
+                            {timeOptions.map((time) => (
+                                <option key={time} value={time}>{time}</option>
+                            ))}
                         </select>
                     </div>
 
@@ -102,9 +187,30 @@ const Events = () => {
                     </select>
                 </div>
 
+                {/* Link and Email Input */}
+                <div className="form-group">
+                    <label>Add link <span className="required">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="Enter URL Here"
+                        value={addLink}
+                        onChange={(e) => setaddLink(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Add Emails <span className="required">*</span></label>
+                    <input
+                        type="text"
+                        placeholder="Add member Emails (comma-separated)"
+                        value={addEmails}
+                        onChange={(e) => setaddEmails(e.target.value)}
+                    />
+                </div>
+
                 <div className="button-group">
                     <button className="cancel-btn">Cancel</button>
-                    <button className="save-btn">Save</button>
+                    <button className="save-btn" onClick={handleSaveEvent}>Save</button>
                 </div>
             </div>
         </div>
