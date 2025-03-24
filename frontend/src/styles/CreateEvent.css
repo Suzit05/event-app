@@ -9,14 +9,16 @@
 }
 
 
-.menu-container {
+.dashboard-menu-container {
     width: 25%;
     height: 100vh;
-    background-color: blueviolet;
+    background-color: #f3f3f1;
+
 }
 
 .screen-container {
     width: 100%;
     height: 100vh;
     background-color: #f3f3f1;
+
 }

@@ -61,8 +61,6 @@ const addEvent = async (req, res) => {
     }
 }
 
-
-
 const getMeetings = async (req, res) => { //api/meeting/getmeetings
     //get all meetings with their details
     try {
@@ -79,7 +77,44 @@ const getMeetings = async (req, res) => { //api/meeting/getmeetings
 
 }
 
+const updateMeeting = async (req, res) => {
+    const { id } = req.params;
+    const { eventTopic, startTime } = req.body;
+
+    try {
+        const updatedMeeting = await Meeting.findByIdAndUpdate(id, { eventTopic, startTime }, { new: true });
+        if (!updatedMeeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+        res.json(updatedMeeting);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating meeting", error });
+        console.log("error in updateMeeting in authController")
+    }
+}
+
+const deleteMeeting = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find and delete the meeting
+        const deletedMeeting = await Meeting.findByIdAndDelete(id);
+
+        if (!deletedMeeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        res.status(200).json({ message: "Meeting deleted successfully", deletedMeeting });
+    } catch (error) {
+        console.error("Error deleting meeting, in meeting controller:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+
+
 //todo--- add availabilty model as well
 
 
-module.exports = { getMeetings, addEvent }
+module.exports = { getMeetings, addEvent, updateMeeting, deleteMeeting }

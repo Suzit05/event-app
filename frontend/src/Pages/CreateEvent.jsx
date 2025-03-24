@@ -10,7 +10,7 @@ const CreateEvent = () => {
 
     return (
         <div className='dashboard-outside-container'>
-            <div className='menu-container'>
+            <div className='dashboard-menu-container'>
                 <Menu />
             </div>
             <div className='screen-container'>
