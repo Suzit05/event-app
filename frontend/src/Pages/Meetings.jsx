@@ -11,6 +11,7 @@ const Meetings = () => {
     const [editingId, setEditingId] = useState(null);
     const [editEventTopic, setEditEventTopic] = useState("");
     const [editStartTime, setEditStartTime] = useState("");
+    const [toggleStates, setToggleStates] = useState({}); // Store toggle states
 
     useEffect(() => {
         const fetchMeetings = async () => {
@@ -26,6 +27,14 @@ const Meetings = () => {
 
                 const data = await response.json();
                 setMeetings(data);
+
+                // Initialize toggle states for each meeting (default ON)
+                const initialToggles = data.reduce((acc, meeting) => {
+                    acc[meeting._id] = true; // Default checked
+                    return acc;
+                }, {});
+                setToggleStates(initialToggles);
+
             } catch (error) {
                 console.error("Error fetching meetings:", error.message);
             }
@@ -33,6 +42,15 @@ const Meetings = () => {
 
         fetchMeetings();
     }, []);
+
+    const handleToggleChange = (id) => {
+        setToggleStates((prevState) => ({
+            ...prevState,
+            [id]: !prevState[id], // Toggle the state
+        }));
+    };
+
+
 
     const copyToClipboard = (link) => {
         if (!link) {
@@ -155,69 +173,73 @@ const Meetings = () => {
 
                     <div className="meetings-grid">
                         {meetings.length > 0 ? (
-                            meetings.map((meeting) => (
-                                <div
-                                    key={meeting._id}
-                                    className="meeting-card"
-                                    style={{ borderTopColor: "blue" }}
-                                >
-                                    <div className="meeting-header">
-                                        {editingId === meeting._id ? (
-                                            <>
-                                                <input
-                                                    type="text"
-                                                    value={editEventTopic}
-                                                    onChange={(e) => setEditEventTopic(e.target.value)}
-                                                    className="edit-input"
-                                                />
-                                            </>
-                                        ) : (
-                                            <h3>{meeting.eventTopic}</h3>
-                                        )}
-                                        <FaRegEdit className="edit-icon" onClick={() => handleEditClick(meeting)} />
-                                    </div>
-
-                                    <p className="meeting-date">{formatDate(meeting.date)}</p>
-
-                                    <p className="meeting-time">
-                                        {editingId === meeting._id ? (
-                                            <input
-                                                type="text"
-                                                value={editStartTime}
-                                                onChange={(e) => setEditStartTime(e.target.value)}
-                                                className="edit-input"
-                                            />
-                                        ) : (
-                                            `${meeting.startTime} - ${calculateEndTime(meeting.startTime, meeting.duration)}`
-                                        )}
-                                    </p>
-                                    <p className="meeting-type">Duration: {meeting.duration} hour</p>
-
-                                    <div className="meeting-footer">
-                                        <div className="meeting-footer-inside">
-                                            <div>
-                                                <label className="toggle-switch">
-                                                    <input type="checkbox" defaultChecked={true} />
-                                                    <span className="slider"></span>
-                                                </label>
-                                            </div>
-                                            <div onClick={() => copyToClipboard(meeting.addLink)}>
-                                                <IoCopyOutline className="copy-icon" />
-                                            </div>
-                                            <div>
-                                                <FaTrash className="delete-icon" onClick={() => handleDeleteMeeting(meeting._id)} />
-
-                                            </div>
+                            meetings.map((meeting) => {
+                                const isToggledOn = toggleStates[meeting._id]; // Get current toggle state
+                                const borderColor = isToggledOn ? "#1877F2" : "#ccc"; // Blue when ON, Red when OFF
+                                return (
+                                    <div
+                                        key={meeting._id}
+                                        className="meeting-card"
+                                        style={{ borderTopColor: borderColor }}
+                                    >
+                                        <div className="meeting-header">
+                                            {editingId === meeting._id ? (
+                                                <>
+                                                    <input
+                                                        type="text"
+                                                        value={editEventTopic}
+                                                        onChange={(e) => setEditEventTopic(e.target.value)}
+                                                        className="edit-input"
+                                                    />
+                                                </>
+                                            ) : (
+                                                <h3>{meeting.eventTopic}</h3>
+                                            )}
+                                            <FaRegEdit className="edit-icon" onClick={() => handleEditClick(meeting)} />
                                         </div>
 
-                                        {editingId === meeting._id && (
-                                            <button className="save-btn" onClick={() => handleSaveEdit(meeting._id)}>
-                                                Save
-                                            </button>
-                                        )}
+                                        <p className="meeting-date">{formatDate(meeting.date)}</p>
+
+                                        <p className="meeting-time">
+                                            {editingId === meeting._id ? (
+                                                <input
+                                                    type="text"
+                                                    value={editStartTime}
+                                                    onChange={(e) => setEditStartTime(e.target.value)}
+                                                    className="edit-input"
+                                                />
+                                            ) : (
+                                                `${meeting.startTime} - ${calculateEndTime(meeting.startTime, meeting.duration)}`
+                                            )}
+                                        </p>
+                                        <p className="meeting-type">Duration: {meeting.duration} hour</p>
+
+                                        <div className="meeting-footer">
+                                            <div className="meeting-footer-inside">
+                                                <div>
+                                                    <label className="toggle-switch">
+                                                        <input type="checkbox" defaultChecked={true} onChange={() => handleToggleChange(meeting._id)} />
+                                                        <span className="slider"></span>
+                                                    </label>
+                                                </div>
+                                                <div onClick={() => copyToClipboard(meeting.addLink)}>
+                                                    <IoCopyOutline className="copy-icon" />
+                                                </div>
+                                                <div>
+                                                    <FaTrash className="delete-icon" onClick={() => handleDeleteMeeting(meeting._id)} />
+
+                                                </div>
+                                            </div>
+
+                                            {editingId === meeting._id && (
+                                                <button className="save-btn" onClick={() => handleSaveEdit(meeting._id)}>
+                                                    Save
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))
+                                )
+                            })
                         ) : (
                             <p className="no-meetings">No meetings available.</p>
                         )}

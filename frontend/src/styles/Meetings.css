@@ -76,8 +76,10 @@
 }
 
 .meeting-card.active {
-    box-shadow: 0 0 8px rgba(0, 0, 255, 0.5);
+    box-shadow: 0 0 8px #1877F2;
 }
+
+
 
 .meeting-header {
     display: flex;

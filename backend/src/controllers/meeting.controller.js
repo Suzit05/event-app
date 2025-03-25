@@ -66,7 +66,7 @@ const getMeetings = async (req, res) => { //api/meeting/getmeetings
     try {
 
         // Fetch all meetings from the database
-        const meetings = await Meeting.find({}, "eventTopic startTime endTime duration date addLink"); //fetch all with the selected fields
+        const meetings = await Meeting.find({}, "eventTopic  hostName startTime endTime duration date addLink addEmails status"); //fetch all with the selected fields
 
         res.status(200).json(meetings);
     } catch (error) {
@@ -111,10 +111,33 @@ const deleteMeeting = async (req, res) => {
     }
 }
 
+//added to change status
+const updateMeetingStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        // Validate status
+        if (!["active", "pending", "rejected"].includes(status)) {
+            return res.status(400).json({ message: "Invalid status value" });
+        }
+
+        const meeting = await Meeting.findByIdAndUpdate(id, { status }, { new: true });
+
+        if (!meeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        res.status(200).json({ message: "Status updated successfully", meeting });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 
 
 
 //todo--- add availabilty model as well
 
 
-module.exports = { getMeetings, addEvent, updateMeeting, deleteMeeting }
+module.exports = { getMeetings, addEvent, updateMeeting, deleteMeeting, updateMeetingStatus }
