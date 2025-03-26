@@ -9,7 +9,12 @@ const meetingSchema = new mongoose.Schema({
     eventTopic: { type: String, required: true },
     description: { type: String },
     hostName: { type: String, required: true }, // Meeting owner
-    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Attendees
+    participants: [
+        {
+            email: { type: String, required: true },
+            status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" },
+        },
+    ],// Attendees
     date: { type: Date, required: true }, // Proper Date format
     startTime: { type: String, required: true }, // "14:00"
     endTime: { type: String, }, // "14:30"

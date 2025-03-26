@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../styles/Booking.css";
 import Menu from '../Components/Menu';
 import cnnctlogo from "../assets/images/cnnctlogo.png";
-
+import { TiTick } from "react-icons/ti";
 
 
 const Booking = () => {
+
 
   //booking page pr kaam kro
   //participants list pr kaam kro00000000000000000
@@ -13,7 +14,9 @@ const Booking = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [meetings, setMeetings] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null); // Store user data
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedAttendees, setSelectedAttendees] = useState([]);
+  const popupRef = useRef(null);
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -52,6 +55,8 @@ const Booking = () => {
 
     fetchMeetings();
     fetchUser();
+
+
   }, []);
 
 
@@ -129,6 +134,7 @@ const Booking = () => {
   };
 
 
+
   //.......added
   if (!loggedInUser) return <p>Loading...</p>; // Show loading if user data is not fetched yet
 
@@ -157,6 +163,57 @@ const Booking = () => {
     if (activeTab === "cancelled") return cancelledMeetings;
     return [];
   };
+
+  const fetchAttendeeNames = async (emails) => {
+    try {
+      const response = await fetch("http://localhost:5001/api/user/getUsersByEmails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // Ensures authentication is sent
+        body: JSON.stringify({ emails }),
+      });
+
+      if (!response.ok) throw new Error(`Failed to fetch attendee names. Status: ${response.status}`);
+
+      const data = await response.json(); // Expected to return an array of { email, firstname ,lastname }
+      console.log("🔹 Backend Response:", data); // Check the actual data structure
+      return data;
+    } catch (error) {
+      console.error("Error fetching attendee names:", error.message);
+      return [];
+    }
+  };
+
+  const handleShowAttendees = async (meeting) => {
+    if (!Array.isArray(meeting.addEmails) || meeting.addEmails.length === 0) {
+      return;
+    }
+
+    try {
+      const attendeesData = await fetchAttendeeNames(meeting.addEmails);
+      const foundEmails = attendeesData.map(user => user.email);
+      const notFoundEmails = meeting.addEmails.filter(email => !foundEmails.includes(email));
+
+      const attendeesList = attendeesData.map(user => ({
+        name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.email,
+        email: user.email
+      }));
+
+      notFoundEmails.forEach(email => {
+        attendeesList.push({ name: email, email: email });
+      });
+
+      setSelectedAttendees(attendeesList);
+      setShowPopup(true);
+    } catch (error) {
+      console.error("Error fetching attendees:", error);
+    }
+  };
+
+
+
+
+
 
 
 
@@ -222,7 +279,15 @@ const Booking = () => {
                       ) : (
                         <span className={`status-label ${meeting.status}`}>{meeting.status}</span>
                       )}
-                      <span className="attendees">👥 {attendeesCount} people</span>
+                      <span
+                        className="attendees"
+                        onClick={() => handleShowAttendees(meeting)}
+                        style={{ cursor: "pointer", textDecoration: "underline" }}
+                      >
+                        👥 {attendeesCount} people
+                      </span>
+
+
                     </div>
                   </div>
                 )
@@ -234,8 +299,36 @@ const Booking = () => {
         </div>
 
       </div>
+
+      {/* 
+      *POP UP PARTICIPANTS */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container" ref={popupRef}>
+            <div className='popup-heading'>
+              <h3>Participants ({selectedAttendees.length})</h3>
+              <button className='popup-accept'> ✔Accept</button>
+              <button className='popup-reject'> 🚫Reject</button>
+            </div>
+
+            <ul>
+              {selectedAttendees.map((attendee, index) => (
+                <li key={index} className="participant-item">
+                  <span>{attendee.name}</span>
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => setShowPopup(false)} className="close-btn">Close</button>
+          </div>
+        </div>
+      )}
+
+
+
     </div>
+
   );
+
 };
 
 export default Booking;
