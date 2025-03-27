@@ -23,6 +23,10 @@ const addEvent = async (req, res) => {
 
         const hostName = `${user.firstName} ${user.lastName}`;
 
+
+        // ✅ Initialize participants array with email and default status as "pending"
+        const participants = addEmails.map(email => ({ email, status: "pending" }));
+
         // Create new meeting/event
         const newMeeting = new Meeting({
             eventId, // ✅ Store eventId
@@ -31,9 +35,10 @@ const addEvent = async (req, res) => {
             date,
             hostName,
             addEmails,
-            addLink, //t
-            startTime, //t
+            addLink,
+            startTime,
             duration,
+            participants, //t
 
             user: req.user._id // Assuming user is authenticated and stored in req.user
         });
@@ -52,6 +57,7 @@ const addEvent = async (req, res) => {
             addEmails: newMeeting.addEmails,
             addLink: newMeeting.addLink,
             duration: newMeeting.duration,
+            participants: newMeeting.participants, // ✅ Include participants in response
 
         });
 
@@ -61,21 +67,19 @@ const addEvent = async (req, res) => {
     }
 }
 
-const getMeetings = async (req, res) => { //api/meeting/getmeetings
-    //get all meetings with their details
-    try {
 
-        // Fetch all meetings from the database
-        const meetings = await Meeting.find({}, "eventTopic  hostName startTime endTime duration date addLink addEmails status"); //fetch all with the selected fields
+const getMeetings = async (req, res) => {
+    try {
+        // Fetch all meetings with participant details
+        const meetings = await Meeting.find({})
+            .select("eventTopic hostName startTime endTime duration date addLink addEmails status participants");
 
         res.status(200).json(meetings);
     } catch (error) {
-        console.error("Error fetching meetings in getMeetings controller,", error.message);
+        console.error("Error fetching meetings:", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
-
-
-}
+};
 
 const updateMeeting = async (req, res) => {
     const { id } = req.params;
@@ -111,7 +115,7 @@ const deleteMeeting = async (req, res) => {
     }
 }
 
-//added to change status
+
 const updateMeetingStatus = async (req, res) => {
     try {
         const { id } = req.params;
@@ -136,10 +140,80 @@ const updateMeetingStatus = async (req, res) => {
 
 
 
+// const updateParticipantResponse = async (req, res) => {
+//     const { meetingId, email, status } = req.body;
+
+//     try {
+//         const meeting = await Meeting.findOneAndUpdate(
+//             { _id: meetingId, "participants.email": email },
+//             { $set: { "participants.$.status": status } },
+//             { new: true }
+//         );
+
+//         if (!meeting) {
+//             return res.status(404).json({ message: "Meeting not found" });
+//         }
+
+//         res.json({ message: "Status updated successfully", meeting });
+//     } catch (error) {
+//         res.status(500).json({ message: "Server error", error: error.message });
+//     }
+// };
+
+const updateParticipantResponse = async (req, res) => {
+    const { meetingId, email, status } = req.body;
+
+    try {
+        // First update the participant's status
+        const meeting = await Meeting.findOneAndUpdate(
+            { _id: meetingId, "participants.email": email },
+            { $set: { "participants.$.status": status } },
+            { new: true }
+        );
+
+        if (!meeting) {
+            return res.status(404).json({ message: "Meeting not found" });
+        }
+
+        // Check if all participants have responded
+        const allResponded = meeting.participants.every(p =>
+            p.status !== 'pending'
+        );
+
+        // Determine overall meeting status
+        let meetingStatus = 'pending';
+        if (allResponded) {
+            const allAccepted = meeting.participants.every(p =>
+                p.status === 'accepted'
+            );
+            meetingStatus = allAccepted ? 'active' : 'rejected';
+        }
+
+        // Update the meeting's overall status if needed
+        if (meeting.status !== meetingStatus) {
+            await Meeting.findByIdAndUpdate(
+                meetingId,
+                { status: meetingStatus },
+                { new: true }
+            );
+        }
+
+        res.json({
+            message: "Status updated successfully",
+            meeting: {
+                ...meeting.toObject(),
+                status: meetingStatus
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 
 
 
 //todo--- add availabilty model as well
 
 
-module.exports = { getMeetings, addEvent, updateMeeting, deleteMeeting, updateMeetingStatus }
+module.exports = { getMeetings, addEvent, updateMeeting, deleteMeeting, updateMeetingStatus, updateParticipantResponse }

@@ -6,14 +6,16 @@ import { useNavigate } from "react-router-dom";
 
 const Menu = () => {
 
+    //mobile k liye menu component bnao
+    //mobile k liye meetings and booking bnao
+
     const [hostName, setHostName] = useState(""); // Empty initially
     const [showLogout, setShowLogout] = useState(false);
     const profileRef = useRef(null);
 
 
-    //host name sarthak k jgh
 
-    // Fetch the authenticated user's name
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -70,25 +72,30 @@ const Menu = () => {
     const navigate = useNavigate()
     return (
         <div className="menu-container">
+
             <div className="menu-logo">
                 <img src={cnnctLogo} alt="CNNCT Logo" />
             </div>
 
             <nav className="menu-nav">
+
                 <ul>
-                    <li onClick={() => navigate("/meetings")} className="active">
+                    <div onClick={() => navigate("/meetings")} className="active">
                         <i className="ri-loop-left-line"></i> Events
-                    </li>
-                    <li onClick={() => navigate("/booking")}>
+                    </div>
+                    <div onClick={() => navigate("/booking")}>
                         <i className="ri-calendar-line"></i> Booking
-                    </li>
-                    <li onClick={() => navigate("/availability")}>
+                    </div>
+                    <div onClick={() => navigate("/availability")}>
                         <i className="ri-time-line"></i> Availability
-                    </li>
-                    <li onClick={() => navigate("/settings")} >
+                    </div>
+                    <div onClick={() => navigate("/settings")} >
                         <i className="ri-settings-3-line"></i> Settings
-                    </li>
+                    </div>
                 </ul>
+
+
+
             </nav>
 
             <button onClick={() => navigate("/create-event")} className="menu-create-btn">
@@ -106,6 +113,7 @@ const Menu = () => {
                 )}
             </div>
         </div>
+
     );
 };
 

@@ -231,10 +231,7 @@
     color: white;
 }
 
-.participant-item {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
+
 
 .close-btn {
     margin-top: 10px;
@@ -244,4 +241,33 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.participant-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.participant-status {
+    font-size: 0.9em;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.status-accepted {
+    color: #28a745;
+    background-color: #e6ffed;
+}
+
+.status-rejected {
+    color: #dc3545;
+    background-color: #ffe6e6;
+}
+
+.status-pending {
+    color: #ffc107;
+    background-color: #fff8e6;
 }

@@ -7,22 +7,20 @@ import { TiTick } from "react-icons/ti";
 
 const Booking = () => {
 
-
-  //booking page pr kaam kro
-  //participants list pr kaam kro00000000000000000
-
   const [activeTab, setActiveTab] = useState("upcoming");
   const [meetings, setMeetings] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null); // Store user data
   const [showPopup, setShowPopup] = useState(false);
   const [selectedAttendees, setSelectedAttendees] = useState([]);
   const popupRef = useRef(null);
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
         const response = await fetch("http://localhost:5001/api/meeting/getmeetings", {
           method: "GET",
           credentials: "include",
+          cache: "no-store", // 🚀 Prevents caching issues //sss
         });
 
         if (!response.ok) {
@@ -60,28 +58,54 @@ const Booking = () => {
   }, []);
 
 
-  const handleStatusUpdate = async (id, newStatus) => {
+
+
+
+
+
+
+  const handleStatusUpdate = async (meetingId, newStatus) => {
+    if (!loggedInUser) return;
+
     try {
-      const response = await fetch(`http://localhost:5001/api/meeting/updatestatus/${id}`, {
+      const response = await fetch(`http://localhost:5001/api/meeting/respond`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({
+          meetingId,
+          email: loggedInUser.email,
+          status: newStatus === "accepted" ? "accepted" : "rejected",
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to update status. Status: ${response.status}`);
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (!data.meeting) {
+        console.error("Meeting update failed!");
+        return;
       }
 
-      const data = await response.json();
-      console.log("Status update response:", data);
+      // Force a refresh of the meetings list
+      const refreshResponse = await fetch("http://localhost:5001/api/meeting/getmeetings", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      });
 
-      // Update UI after status change
-      setMeetings((prevMeetings) =>
-        prevMeetings.map((meeting) =>
-          meeting._id === id ? { ...meeting, status: newStatus } : meeting
-        )
-      );
+      if (refreshResponse.ok) {
+        const refreshedData = await refreshResponse.json();
+        setMeetings(refreshedData);
+      }
+
+      // Optionally switch to upcoming tab after acceptance
+      if (newStatus === "accepted") {
+        setActiveTab("upcoming");
+      } else {
+        setActiveTab("cancelled");
+      }
+
     } catch (error) {
       console.error("Error updating status:", error.message);
     }
@@ -135,26 +159,58 @@ const Booking = () => {
 
 
 
+
   //.......added
   if (!loggedInUser) return <p>Loading...</p>; // Show loading if user data is not fetched yet
 
   const fullName = `${loggedInUser.firstName} ${loggedInUser.lastName}`;
+
   //......added
-  const upcomingMeetings = meetings.filter(
-    (meeting) => isUpcoming(meeting.date) && meeting.status === "active"
+  const upcomingMeetings = meetings.filter(meeting => {
+    const isParticipant = meeting.addEmails?.includes(loggedInUser.email);
+    const isHost = meeting.hostName === fullName;
+    const userStatus = meeting.participants?.find(p => p.email === loggedInUser.email)?.status;
+
+    return isUpcoming(meeting.date) && (
+      // Show if:
+      // - Meeting is active and user is participant/host
+      (meeting.status === "active" && (isParticipant || isHost)) ||
+      // - User is host (regardless of status)
+      isHost ||
+      // - User has accepted/rejected but meeting is still pending (other participants haven't responded)
+      (userStatus && userStatus !== "pending" && meeting.status === "pending")
+    );
+  });
+
+  const pastMeetings = meetings.filter(meeting =>
+    !isUpcoming(new Date(meeting.date)) &&
+    meeting.status === "active" &&
+    (meeting.hostName === fullName || meeting.addEmails?.includes(loggedInUser.email))
   );
 
-  const pastMeetings = meetings.filter(
-    (meeting) => !isUpcoming(meeting.date) && meeting.status === "active"
-  );
+  const pendingMeetings = meetings.filter(meeting => {
+    const isParticipant = meeting.addEmails?.includes(loggedInUser.email);
+    const userStatus = meeting.participants?.find(p => p.email === loggedInUser.email)?.status;
 
-  const pendingMeetings = meetings.filter(
-    (meeting) => meeting.status === "pending" || (meeting.hostName !== fullName && meeting.status === "pending")
-  );
+    return (
+      meeting.status === "pending" &&
+      meeting.hostName !== fullName &&
+      isParticipant &&
+      (!userStatus || userStatus === "pending") // Only show if user hasn't responded
+    );
+  });
 
-  const cancelledMeetings = meetings.filter(
-    (meeting) => meeting.status === "rejected"
-  );
+  const cancelledMeetings = meetings.filter(meeting => {
+    const isParticipant = meeting.addEmails?.includes(loggedInUser.email);
+    return (
+      (meeting.status === "rejected" ||
+        (meeting.participants?.some(p => p.status === "rejected"))) &&
+      (meeting.hostName === fullName || isParticipant)
+    );
+  });
+
+  //upr tk
+
 
   const getMeetingsByTab = () => {
     if (activeTab === "upcoming") return upcomingMeetings;
@@ -184,6 +240,32 @@ const Booking = () => {
     }
   };
 
+  // const handleShowAttendees = async (meeting) => {
+  //   if (!Array.isArray(meeting.addEmails) || meeting.addEmails.length === 0) {
+  //     return;
+  //   }
+
+  //   try {
+  //     const attendeesData = await fetchAttendeeNames(meeting.addEmails);
+  //     const foundEmails = attendeesData.map(user => user.email);
+  //     const notFoundEmails = meeting.addEmails.filter(email => !foundEmails.includes(email));
+
+  //     const attendeesList = attendeesData.map(user => ({
+  //       name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.email,
+  //       email: user.email
+  //     }));
+
+  //     notFoundEmails.forEach(email => {
+  //       attendeesList.push({ name: email, email: email });
+  //     });
+
+  //     setSelectedAttendees(attendeesList);
+  //     setShowPopup(true);
+  //   } catch (error) {
+  //     console.error("Error fetching attendees:", error);
+  //   }
+  // };
+
   const handleShowAttendees = async (meeting) => {
     if (!Array.isArray(meeting.addEmails) || meeting.addEmails.length === 0) {
       return;
@@ -194,13 +276,24 @@ const Booking = () => {
       const foundEmails = attendeesData.map(user => user.email);
       const notFoundEmails = meeting.addEmails.filter(email => !foundEmails.includes(email));
 
-      const attendeesList = attendeesData.map(user => ({
-        name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.email,
-        email: user.email
-      }));
+      // Create enhanced attendees list with status
+      const attendeesList = attendeesData.map(user => {
+        const participantStatus = meeting.participants?.find(p => p.email === user.email)?.status || 'pending';
+        return {
+          name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.email,
+          email: user.email,
+          status: participantStatus
+        };
+      });
 
+      // Add unknown emails with pending status
       notFoundEmails.forEach(email => {
-        attendeesList.push({ name: email, email: email });
+        const participantStatus = meeting.participants?.find(p => p.email === email)?.status || 'pending';
+        attendeesList.push({
+          name: email,
+          email: email,
+          status: participantStatus
+        });
       });
 
       setSelectedAttendees(attendeesList);
@@ -209,9 +302,6 @@ const Booking = () => {
       console.error("Error fetching attendees:", error);
     }
   };
-
-
-
 
 
 
@@ -267,18 +357,26 @@ const Booking = () => {
 
                     </div>
                     <div className="booking-status">
+
                       {activeTab === "pending" ? (
                         <>
-                          <button className="accept-btn" onClick={() => handleStatusUpdate(meeting._id, "active")}>
+                          <button
+                            className="accept-btn"
+                            onClick={() => handleStatusUpdate(meeting._id, "accepted")}
+                          >
                             Accept
                           </button>
-                          <button className="reject-btn" onClick={() => handleStatusUpdate(meeting._id, "rejected")}>
+                          <button
+                            className="reject-btn"
+                            onClick={() => handleStatusUpdate(meeting._id, "rejected")}
+                          >
                             Reject
                           </button>
                         </>
                       ) : (
                         <span className={`status-label ${meeting.status}`}>{meeting.status}</span>
                       )}
+
                       <span
                         className="attendees"
                         onClick={() => handleShowAttendees(meeting)}
@@ -302,7 +400,7 @@ const Booking = () => {
 
       {/* 
       *POP UP PARTICIPANTS */}
-      {showPopup && (
+      {/* {showPopup && (
         <div className="popup-overlay">
           <div className="popup-container" ref={popupRef}>
             <div className='popup-heading'>
@@ -319,6 +417,41 @@ const Booking = () => {
               ))}
             </ul>
             <button onClick={() => setShowPopup(false)} className="close-btn">Close</button>
+          </div>
+        </div>
+      )} */}
+
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-container" ref={popupRef}>
+            <div className='popup-heading'>
+              <h3>Participants ({selectedAttendees.length})</h3>
+              <h4 className='popup-accept'>✔Accept</h4>
+              <h4 className='popup-reject'>🚫Reject</h4>
+            </div>
+
+            <ul>
+              {selectedAttendees.map((attendee, index) => (
+                <li key={index} className="participant-item">
+                  <span className="participant-name">{attendee.name}</span>
+                  <span className={`participant-status ${attendee.status}`}>
+                    {attendee.status === 'accepted' ? (
+                      <span className="status-accepted">✓ </span>
+                    ) : attendee.status === 'rejected' ? (
+                      <span className="status-rejected">✗ </span>
+                    ) : (
+                      <span className="status-pending">⌛ Pending</span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="close-btn"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}

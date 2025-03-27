@@ -1,7 +1,6 @@
 .menu-container {
     width: 250px;
     background: #f9f9f9;
-
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -21,7 +20,7 @@
     width: 100%;
 }
 
-.menu-nav li {
+.menu-nav div {
     display: flex;
     align-items: center;
     padding: 12px;
@@ -31,12 +30,12 @@
     transition: all 0.3s ease;
 }
 
-.menu-nav li i {
+.menu-nav div i {
     margin-right: 10px;
     font-size: 18px;
 }
 
-.menu-nav li:hover,
+.menu-nav div:hover,
 .menu-nav .active {
     color: #007bff;
     font-weight: 600;
@@ -81,3 +80,4 @@
     font-size: 14px;
     font-weight: 500;
 }
+
