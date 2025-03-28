@@ -171,7 +171,7 @@ const Events = () => {
                     </div>
 
                     <div className="form-group">
-                        <select value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+                        <select className="time-zone" value={timezone} onChange={(e) => setTimezone(e.target.value)}>
                             <option>(UTC +5:00 Delhi)</option>
                         </select>
                     </div>

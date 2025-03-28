@@ -71,46 +71,66 @@ const Menu = () => {
 
     const navigate = useNavigate()
     return (
-        <div className="menu-container">
+        <div>
+            <div>   <div className="menu-container">
 
-            <div className="menu-logo">
-                <img src={cnnctLogo} alt="CNNCT Logo" />
+                <div className="menu-logo">
+                    <img src={cnnctLogo} alt="CNNCT Logo" />
+                </div>
+
+                <nav className="menu-nav">
+
+                    <ul>
+                        <div onClick={() => navigate("/meetings")} className="active">
+                            <i className="ri-loop-left-line"></i> Events
+                        </div>
+                        <div onClick={() => navigate("/booking")}>
+                            <i className="ri-calendar-line"></i> Booking
+                        </div>
+                        <div onClick={() => navigate("/availability")}>
+                            <i className="ri-time-line"></i> Availability
+                        </div>
+                        <div onClick={() => navigate("/settings")} >
+                            <i className="ri-settings-3-line"></i> Settings
+                        </div>
+                    </ul>
+
+
+
+                </nav>
+
+                <button onClick={() => navigate("/create-event")} className="menu-create-btn">
+                    <i className="ri-add-line"></i> Create
+                </button>
+
+                <div className="menu-profile" onClick={toggleLogout} ref={profileRef}>
+                    <img src={userdp} alt="User" className="profile-img" />
+                    <span className="profile-name">{hostName}</span>
+
+                    {showLogout && (
+                        <button className="logout-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    )}
+                </div>
             </div>
-
-            <nav className="menu-nav">
-
-                <ul>
-                    <div onClick={() => navigate("/meetings")} className="active">
-                        <i className="ri-loop-left-line"></i> Events
-                    </div>
-                    <div onClick={() => navigate("/booking")}>
-                        <i className="ri-calendar-line"></i> Booking
-                    </div>
-                    <div onClick={() => navigate("/availability")}>
-                        <i className="ri-time-line"></i> Availability
-                    </div>
-                    <div onClick={() => navigate("/settings")} >
-                        <i className="ri-settings-3-line"></i> Settings
-                    </div>
-                </ul>
-
-
-
-            </nav>
-
-            <button onClick={() => navigate("/create-event")} className="menu-create-btn">
-                <i className="ri-add-line"></i> Create
-            </button>
-
-            <div className="menu-profile" onClick={toggleLogout} ref={profileRef}>
-                <img src={userdp} alt="User" className="profile-img" />
-                <span className="profile-name">{hostName}</span>
-
-                {showLogout && (
-                    <button className="logout-btn" onClick={handleLogout}>
-                        Logout
-                    </button>
-                )}
+            </div>
+            <div className="mobile-menu-container">
+                <div className="mob-list">
+                <div onClick={() => navigate("/meetings")} className="active">
+                            <i className="ri-loop-left-line"></i> Events
+                        </div>
+                        <div onClick={() => navigate("/booking")}>
+                            <i className="ri-calendar-line"></i> Booking
+                        </div>
+                        <div onClick={() => navigate("/availability")}>
+                            <i className="ri-time-line"></i> Availability
+                        </div>
+                        <div onClick={() => navigate("/settings")} >
+                            <i className="ri-settings-3-line"></i> Settings
+                        </div>
+                </div>
+          
             </div>
         </div>
 

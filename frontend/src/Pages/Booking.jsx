@@ -398,28 +398,7 @@ const Booking = () => {
 
       </div>
 
-      {/* 
-      *POP UP PARTICIPANTS */}
-      {/* {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-container" ref={popupRef}>
-            <div className='popup-heading'>
-              <h3>Participants ({selectedAttendees.length})</h3>
-              <button className='popup-accept'> ✔Accept</button>
-              <button className='popup-reject'> 🚫Reject</button>
-            </div>
 
-            <ul>
-              {selectedAttendees.map((attendee, index) => (
-                <li key={index} className="participant-item">
-                  <span>{attendee.name}</span>
-                </li>
-              ))}
-            </ul>
-            <button onClick={() => setShowPopup(false)} className="close-btn">Close</button>
-          </div>
-        </div>
-      )} */}
 
       {showPopup && (
         <div className="popup-overlay">

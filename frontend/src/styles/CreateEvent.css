@@ -22,3 +22,31 @@
     background-color: #f3f3f1;
 
 }
+
+@media (max-width:426px) {
+
+
+    .dashboard-outside-container {
+
+        background-color: #f3f3f1;
+
+
+        width: 100vw;
+        height: 100vh;
+    }
+
+
+    .dashboard-menu-container {
+        width: 100%;
+        height: 10vh;
+        background-color: #f3f3f1;
+
+    }
+
+    .screen-container {
+        width: 100vh;
+        height: 100vh;
+        background-color: #f3f3f1;
+
+    }
+}
