@@ -6,6 +6,7 @@ import { TiTick } from "react-icons/ti";
 
 
 const Booking = () => {
+  //availability bnao...........and conflictt
 
   const [activeTab, setActiveTab] = useState("upcoming");
   const [meetings, setMeetings] = useState([]);

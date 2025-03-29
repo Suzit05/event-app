@@ -1,0 +1,93 @@
+.setting-outside-container {
+    background-color: palevioletred;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    max-height: fit-content;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.setting-menu-container {
+    width: 25%;
+    height: 100vh;
+    background-color: #f3f3f1;
+
+}
+
+.setting-screen-container {
+    width: 100%;
+    height: 100vh;
+    background-color: #f3f3f1;
+
+}
+
+.settings-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.settings-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.settings-subtitle {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 15px;
+}
+
+.settings-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #007bff;
+}
+
+.settings-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 5px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #0056b3;
+}
