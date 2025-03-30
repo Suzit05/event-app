@@ -28,13 +28,12 @@ const userSchema = new mongoose.Schema({
 
         minLength: 6,
     },
-    // meetingsHosted: [{ type: mongoose.Schema.Types.ObjectId, ref: "Meeting" }], // Meetings user created
-    // meetingsJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: "Meeting" }], // Meetings user is attending
+
     availability: [
         {
-            day: { type: String, enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] },
-            startTime: { type: String }, // "09:00"
-            endTime: { type: String } // "17:00"
+            day: { type: String, required: true }, // e.g., "Monday"
+            startTime: { type: String, required: true }, // e.g., "09:00 AM"
+            endTime: { type: String, required: true }, // e.g., "05:00 PM"
         }
     ],
     createdAt: { type: Date, default: Date.now }

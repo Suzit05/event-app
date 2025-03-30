@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -11,39 +11,85 @@ const localizer = momentLocalizer(moment);
 const Availability = () => {
 
   const [view, setView] = useState("availability"); // Default view
-  const [events, setEvents] = useState([
-    {
-      title: "Meeting",
-      start: new Date(2024, 2, 28, 9, 0), // Example event
-      end: new Date(2024, 2, 28, 10, 0),
-    },
-  ]);
-  // Handle adding a new event when user selects a slot
-  const handleSelectSlot = ({ start, end }) => {
-    const title = window.prompt("Enter Event Title:");
-    if (title) {
-      setEvents([...events, { start, end, title }]);
-    }
-  };
-
-  // Handle editing an event when user clicks it
-  const handleSelectEvent = (event) => {
-    const newTitle = window.prompt("Edit Event Title:", event.title);
-    if (newTitle) {
-      setEvents(events.map(e => (e === event ? { ...e, title: newTitle } : e)));
-    }
-  };
-
+  const [events, setEvents] = useState([]);
   const [availability, setAvailability] = useState({
-    Sun: { checked: true, slots: [["", ""]] },
-    Mon: { checked: true, slots: [["", ""]] },
-    Tue: { checked: true, slots: [["", ""]] },
-    Wed: { checked: true, slots: [["", ""]] },
-    Thus: { checked: true, slots: [["", ""]] },
-    Fri: { checked: true, slots: [["", ""]] },
-    Sat: { checked: true, slots: [["", ""]] },
+    Sun: { checked: false, slots: [["", ""]] },
+    Mon: { checked: false, slots: [["", ""]] },
+    Tue: { checked: false, slots: [["", ""]] },
+    Wed: { checked: false, slots: [["", ""]] },
+    Thu: { checked: false, slots: [["", ""]] },
+    Fri: { checked: false, slots: [["", ""]] },
+    Sat: { checked: false, slots: [["", ""]] }
   });
 
+  useEffect(() => {
+    fetchAvailability(); // Load availability when component mounts
+  }, []);
+
+  // Fetch User Availability from Backend
+  const fetchAvailability = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/api/user/get-avail", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        const formattedAvailability = {};
+        ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach((day) => {
+          const foundDay = data.find((d) => d.day === day);
+          formattedAvailability[day] = foundDay
+            ? { checked: true, slots: [[foundDay.startTime, foundDay.endTime]] }
+            : { checked: false, slots: [["", ""]] };
+        });
+
+        setAvailability(formattedAvailability);
+      }
+    } catch (error) {
+      console.error("Error fetching availability:", error);
+    }
+  };
+
+  // Update User Availability in Backend
+  const updateAvailability = async () => {
+    // Filter out empty or incomplete slots
+    const formattedAvailability = Object.entries(availability)
+      .filter(([_, { checked }]) => checked)
+      .flatMap(([day, { slots }]) =>
+        slots
+          .filter(([start, end]) => start && end) // Only include complete slots
+          .map(([startTime, endTime]) => ({
+            day,
+            startTime,
+            endTime
+          }))
+      );
+
+    if (formattedAvailability.length === 0) {
+      alert("Please add at least one valid time slot");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/user/post-avail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ availability: formattedAvailability }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update availability");
+      }
+
+      const data = await response.json();
+      alert(data.message || "Availability updated successfully!");
+    } catch (error) {
+      console.error("Error updating availability:", error);
+      alert("Failed to update availability");
+    }
+  };
   const handleCheckboxChange = (day) => {
     setAvailability((prev) => ({
       ...prev,
@@ -79,16 +125,15 @@ const Availability = () => {
   };
 
   return (
-    <div className='avail-outside-container'>
-      <div className='avail-menu-container'>
+    <div className="avail-outside-container">
+      <div className="avail-menu-container">
         <Menu />
       </div>
-      <div className='avail-screen-container'>
+      <div className="avail-screen-container">
         <div className="availability-container">
           <h2 className="title">Availability</h2>
           <p className="subtitle">Configure times when you are available for bookings</p>
 
-          {/* ✅ Fixed: View Toggle */}
           <div className="view-buttons">
             <button
               className={`btn ${view === "availability" ? "active" : ""}`}
@@ -103,8 +148,8 @@ const Availability = () => {
               📅 Calendar View
             </button>
           </div>
-          {view === "availability" ? (
 
+          {view === "availability" ? (
             <div className="availability-card">
               <div className="availability-header">
                 <span className="activity">Activity <span className="dropdown">▼ Event type</span></span>
@@ -122,15 +167,13 @@ const Availability = () => {
                         {slots.map((slot, index) => (
                           <div className="slot" key={index}>
                             <input
-                              type="text"
-                              placeholder="Start"
+                              type="time"
                               value={slot[0]}
                               onChange={(e) => handleTimeChange(day, index, "start", e.target.value)}
                             />
                             <span>-</span>
                             <input
-                              type="text"
-                              placeholder="End"
+                              type="time"
                               value={slot[1]}
                               onChange={(e) => handleTimeChange(day, index, "end", e.target.value)}
                             />
@@ -139,7 +182,6 @@ const Availability = () => {
                             <button><FaRegCopy /></button>
                           </div>
                         ))}
-
                       </div>
                     ) : (
                       <span className="unavailable-text">Unavailable</span>
@@ -147,6 +189,8 @@ const Availability = () => {
                   </div>
                 ))}
               </div>
+
+              <button className="save-btn" onClick={updateAvailability}>Save Availability</button>
             </div>
           ) : (
             <div className="calendar-view">
@@ -165,8 +209,18 @@ const Availability = () => {
                   startAccessor="start"
                   endAccessor="end"
                   selectable
-                  onSelectSlot={handleSelectSlot}
-                  onSelectEvent={handleSelectEvent}
+                  onSelectSlot={(slotInfo) => {
+                    const title = window.prompt("Enter Event Title:");
+                    if (title) {
+                      setEvents([...events, { start: slotInfo.start, end: slotInfo.end, title }]);
+                    }
+                  }}
+                  onSelectEvent={(event) => {
+                    const newTitle = window.prompt("Edit Event Title:", event.title);
+                    if (newTitle) {
+                      setEvents(events.map((e) => (e === event ? { ...e, title: newTitle } : e)));
+                    }
+                  }}
                   style={{ height: 500 }}
                 />
               </div>

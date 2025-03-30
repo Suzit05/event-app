@@ -37,7 +37,36 @@ const getUsersByEmails = async (req, res) => {
     }
 }
 
+const getAvail = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select("availability");
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json(user.availability);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
 
 
+const postAvail = async (req, res) => {
+    console.log("Received availability data:", req.body); // Add this line
+    const { availability } = req.body;
 
-module.exports = { getProfile, getUsersByEmails }
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.availability = availability; // Update availability
+        await user.save();
+
+        res.json({ message: "Availability updated successfully", availability: user.availability });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+
+
+module.exports = { getProfile, getUsersByEmails, getAvail, postAvail }
