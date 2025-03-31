@@ -9,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify';  // Import toast
 import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN USERS)
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
     const navigate = useNavigate();
     const [meetings, setMeetings] = useState([]);
     const [editingId, setEditingId] = useState(null);
@@ -19,7 +20,8 @@ const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN
     useEffect(() => {
         const fetchMeetings = async () => {
             try {
-                const response = await fetch("http://localhost:5001/api/meeting/getmeetings", {
+
+                const response = await fetch(`${API_BASE_URL}/api/meeting/getmeetings`, {
                     method: "GET",
                     credentials: "include",
                 });
@@ -107,7 +109,8 @@ const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN
 
     const handleSaveEdit = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/meeting/update/${id}`, {
+
+            const response = await fetch(`${API_BASE_URL}/api/meeting/update/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -135,7 +138,8 @@ const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN
         if (!confirmDelete) return;
 
         try {
-            const response = await fetch(`http://localhost:5001/api/meeting/delete/${id}`, {
+
+            const response = await fetch(`${API_BASE_URL}/api/meeting/delete/${id}`, {
                 method: "DELETE",
                 credentials: "include",
             });

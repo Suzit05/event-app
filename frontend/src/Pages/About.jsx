@@ -31,8 +31,9 @@ const About = () => {
         }
 
         try {
+            const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
             const response = await axios.put(
-                "http://localhost:5001/api/auth/about",
+                `${API_BASE_URL}/api/auth/about`,
                 { username },
                 {
                     withCredentials: true, // Include cookies in the request

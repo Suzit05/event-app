@@ -7,7 +7,8 @@ import { toast, ToastContainer } from 'react-toastify';  // Import toast
 import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Availability = () => {
-  // check once the working and then deploy😎
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
+
   const [view, setView] = useState("availability"); // Default view
   const [events, setEvents] = useState([]);
   const [availability, setAvailability] = useState({
@@ -26,7 +27,7 @@ const Availability = () => {
 
   const fetchAvailability = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/user/get-avail", {
+      const response = await fetch(`${API_BASE_URL}/api/user/get-avail`, {
         method: "GET",
         credentials: "include",
       });
@@ -67,7 +68,7 @@ const Availability = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/user/post-avail", {
+      const response = await fetch(`${API_BASE_URL}/api/user/post-avail`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

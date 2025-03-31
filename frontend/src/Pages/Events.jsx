@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 //this is Event Component for Create Event
 
 const Events = () => {
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
     const [eventId, setEventId] = useState(null); // ✅ Store eventId
     const [eventTopic, setEventTopic] = useState("");
     const [password, setPassword] = useState("");
@@ -31,7 +32,8 @@ const Events = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5001/api/auth/user", {
+
+                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
                     method: "GET",
                     credentials: "include", // ✅ Send cookies with request
                 });
@@ -68,7 +70,8 @@ const Events = () => {
         };
 
         try {
-            const response = await fetch("http://localhost:5001/api/meeting/addEvent", {
+
+            const response = await fetch(`${API_BASE_URL}/api/meeting/addEvent`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

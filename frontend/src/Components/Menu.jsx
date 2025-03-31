@@ -5,7 +5,7 @@ import userdp from "../assets/images/userdp.png"
 import { useNavigate } from "react-router-dom";
 
 const Menu = () => {
-
+    const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
     //mobile k liye menu component bnao
     //mobile k liye meetings and booking bnao
 
@@ -20,7 +20,7 @@ const Menu = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("http://localhost:5001/api/auth/user", {
+                const response = await fetch(`${API_BASE_URL}/api/auth/user`, {
                     method: "GET",
                     credentials: "include", // ✅ Send cookies with request
                 });
@@ -42,7 +42,7 @@ const Menu = () => {
     const handleLogout = async () => {
         console.log("logout btn clicked")
         try {
-            await fetch("http://localhost:5001/api/auth/logout", {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });

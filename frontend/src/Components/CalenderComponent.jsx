@@ -7,6 +7,7 @@ import "../styles/Calendar.css";
 const localizer = momentLocalizer(moment);
 
 const CalendarComponent = () => {
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [view, setView] = useState("month"); // ✅ Added view state
@@ -18,7 +19,7 @@ const CalendarComponent = () => {
   // Fetch meetings from the backend
   const fetchMeetings = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/meeting/getmeetings", {
+      const response = await fetch(`${API_BASE_URL}/api/meeting/getmeetings`, {
         method: "GET",
         credentials: "include",
       });
@@ -65,7 +66,7 @@ const CalendarComponent = () => {
       <div className="calendar-container">
         <Calendar
           localizer={localizer}
-          events={events} 
+          events={events}
           startAccessor="start"
           endAccessor="end"
           selectable

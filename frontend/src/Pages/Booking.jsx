@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 
 const Booking = () => {
-  //availability bnao...........and conflictt
+
 
   const [activeTab, setActiveTab] = useState("upcoming");
   const [meetings, setMeetings] = useState([]);
@@ -17,10 +17,14 @@ const Booking = () => {
   const [selectedAttendees, setSelectedAttendees] = useState([]);
   const popupRef = useRef(null);
 
+
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
+  
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/meeting/getmeetings", {
+
+        const response = await fetch(`${API_BASE_URL}/api/meeting/getmeetings`, {
           method: "GET",
           credentials: "include",
           cache: "no-store", // Prevents caching issues 
@@ -40,7 +44,8 @@ const Booking = () => {
 
     const fetchUser = async () => { //added now to get logged in user
       try {
-        const res = await fetch("http://localhost:5001/api/user/profile", {
+
+        const res = await fetch(`${API_BASE_URL}/api/user/profile`, {
           method: "GET",
           credentials: "include",
         });
@@ -71,7 +76,8 @@ const Booking = () => {
     if (!loggedInUser) return;
 
     try {
-      const response = await fetch(`http://localhost:5001/api/meeting/respond`, {
+
+      const response = await fetch(`${API_BASE_URL}/api/meeting/respond`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -91,7 +97,8 @@ const Booking = () => {
       }
 
       // force a refresh of the meetings list
-      const refreshResponse = await fetch("http://localhost:5001/api/meeting/getmeetings", {
+      //
+      const refreshResponse = await fetch(`${API_BASE_URL}/api/meeting/getmeetings`, {
         method: "GET",
         credentials: "include",
         cache: "no-store",
@@ -225,7 +232,7 @@ const Booking = () => {
 
   const fetchAttendeeNames = async (emails) => {
     try {
-      const response = await fetch("http://localhost:5001/api/user/getUsersByEmails", {
+      const response = await fetch(`${API_BASE_URL}/api/user/getUsersByEmails`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // Ensures authentication is sent

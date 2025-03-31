@@ -5,6 +5,8 @@ import { toast, ToastContainer } from 'react-toastify';  // Import toast
 import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Settings = () => {
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,7 +21,8 @@ const Settings = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/user/profile", {
+
+      const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
         method: "GET",
         credentials: "include", // Important for cookies
       });
@@ -51,7 +54,8 @@ const Settings = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/user/update-profile", {
+
+      const response = await fetch(`${API_BASE_URL}/api/user/update-profile`, {
         method: "PUT",
         credentials: "include",
         headers: {
