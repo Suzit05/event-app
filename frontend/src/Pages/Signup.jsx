@@ -4,7 +4,7 @@ import "../styles/Signup.css";
 import rightLogin from "../assets/images/rightLogin.png";
 import cnnctlogo from "../assets/images/cnnctlogo.png";
 import { useNavigate } from 'react-router-dom';
-import { toast , ToastContainer} from 'react-toastify';  // Import toast
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
 import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 
@@ -76,7 +76,9 @@ const Signup = () => {
 
         try {
             setLoading(true);
-            const response = await axios.post("http://localhost:5001/api/auth/signup", formData); // Replace with your backend URL
+            const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
+            const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, formData, { withCredentials: true });
+
             toast.success("Signup successful!", { position: "top-center", autoClose: 3000 });  // ✅ Success toast
             navigate("/login")
 
@@ -102,7 +104,7 @@ const Signup = () => {
 
     return (
         <div className='signup-outer-container'>
-             <ToastContainer /> 
+            <ToastContainer />
             <div className='signup-left-container'>
                 <div className='signup-logo-container'>
                     <img src={cnnctlogo} alt="CNNCT Logo" />

@@ -13,7 +13,7 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors({
-    origin: "http://localhost:5173", // Your frontend URL
+    origin: ["http://localhost:5173", "https://event-app-9djv.onrender.com"], // Your frontend URL
     credentials: true
 }));
 
