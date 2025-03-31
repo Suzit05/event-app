@@ -7,10 +7,10 @@ const generateToken = (userId, res) => {
     })
 
     res.cookie('jwt', token, {
-        maxAge: 30 * 24 * 60 * 60 * 1000, //ms , 10 days
-        httpOnly: true, //prevent XSS attacks
-        sameSite: "None", //cross site attack
-
+        maxAge: 30 * 24 * 60 * 60 * 1000, // ms, 30 days
+        httpOnly: true, // prevent XSS attacks
+        sameSite: "none", // cross-site cookie (must be lowercase)
+        secure: true // required for SameSite=none
     }) //token cookie m dala gya
 
     return token;
