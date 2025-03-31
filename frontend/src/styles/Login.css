@@ -113,6 +113,27 @@
     height: 100%;
 }
 
+.Toastify__toast {
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.Toastify__toast--success {
+    background-color: #28a745 !important;
+    /* Green */
+    color: white;
+}
+
+.Toastify__toast--error {
+    background-color: #dc3545 !important;
+    /* Red */
+    color: white;
+}
+
+
 
 @media (max-width:426px) {
     .outer-container {

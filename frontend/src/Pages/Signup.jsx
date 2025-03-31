@@ -4,8 +4,16 @@ import "../styles/Signup.css";
 import rightLogin from "../assets/images/rightLogin.png";
 import cnnctlogo from "../assets/images/cnnctlogo.png";
 import { useNavigate } from 'react-router-dom';
+import { toast , ToastContainer} from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
+
+
+
+
+
 
 const Signup = () => {
+
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         firstName: "",
@@ -69,7 +77,7 @@ const Signup = () => {
         try {
             setLoading(true);
             const response = await axios.post("http://localhost:5001/api/auth/signup", formData); // Replace with your backend URL
-            alert("Signup successful!");
+            toast.success("Signup successful!", { position: "top-center", autoClose: 3000 });  // ✅ Success toast
             navigate("/login")
 
 
@@ -85,7 +93,7 @@ const Signup = () => {
             });
             setErrors({});
         } catch (error) {
-            alert("Signup failed. Please try again.");
+            toast.error("Signup failed. Please try again.", { position: "top-right", autoClose: 3000 }); // ❌ Error toast
             console.error(error);
         } finally {
             setLoading(false);
@@ -94,6 +102,7 @@ const Signup = () => {
 
     return (
         <div className='signup-outer-container'>
+             <ToastContainer /> 
             <div className='signup-left-container'>
                 <div className='signup-logo-container'>
                     <img src={cnnctlogo} alt="CNNCT Logo" />

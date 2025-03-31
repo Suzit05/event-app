@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Menu from "../Components/Menu";
 import "../styles/Setting.css";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Settings = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +46,7 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Password do not match", { position: "top-center", autoClose: 3000 });
       return;
     }
 
@@ -66,11 +68,12 @@ const Settings = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Failed to update profile");
+        toast.error(data.message || "Failed to update profile", { position: "top-center", autoClose: 3000 });
+
         return;
       }
+      toast.success("Profile updated successfully!", { position: "top-center", autoClose: 3000 });
 
-      alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -78,6 +81,7 @@ const Settings = () => {
 
   return (
     <div className="setting-outside-container">
+      <ToastContainer />
       <div className="setting-menu-container">
         <Menu />
       </div>

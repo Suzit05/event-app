@@ -112,4 +112,23 @@
     .mob-list div {
         cursor: pointer;
     }
+
+    .menu-profile {
+        top: 0;
+        right: 5vw;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        margin-top: auto;
+        background: #fff;
+        padding: 4px 4px;
+        border-radius: 40px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .profile-name {
+
+        display: none;
+    }
 }

@@ -3,6 +3,8 @@ import "../styles/Booking.css";
 import Menu from '../Components/Menu';
 import cnnctlogo from "../assets/images/cnnctlogo.png";
 import { TiTick } from "react-icons/ti";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 
 const Booking = () => {
@@ -21,7 +23,7 @@ const Booking = () => {
         const response = await fetch("http://localhost:5001/api/meeting/getmeetings", {
           method: "GET",
           credentials: "include",
-          cache: "no-store", // 🚀 Prevents caching issues //sss
+          cache: "no-store", // Prevents caching issues 
         });
 
         if (!response.ok) {
@@ -88,7 +90,7 @@ const Booking = () => {
         return;
       }
 
-      // Force a refresh of the meetings list
+      // force a refresh of the meetings list
       const refreshResponse = await fetch("http://localhost:5001/api/meeting/getmeetings", {
         method: "GET",
         credentials: "include",
@@ -100,7 +102,7 @@ const Booking = () => {
         setMeetings(refreshedData);
       }
 
-      // Optionally switch to upcoming tab after acceptance
+      // optionally switch to upcoming tab after acceptance
       if (newStatus === "accepted") {
         setActiveTab("upcoming");
       } else {
@@ -241,31 +243,7 @@ const Booking = () => {
     }
   };
 
-  // const handleShowAttendees = async (meeting) => {
-  //   if (!Array.isArray(meeting.addEmails) || meeting.addEmails.length === 0) {
-  //     return;
-  //   }
 
-  //   try {
-  //     const attendeesData = await fetchAttendeeNames(meeting.addEmails);
-  //     const foundEmails = attendeesData.map(user => user.email);
-  //     const notFoundEmails = meeting.addEmails.filter(email => !foundEmails.includes(email));
-
-  //     const attendeesList = attendeesData.map(user => ({
-  //       name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName || user.email,
-  //       email: user.email
-  //     }));
-
-  //     notFoundEmails.forEach(email => {
-  //       attendeesList.push({ name: email, email: email });
-  //     });
-
-  //     setSelectedAttendees(attendeesList);
-  //     setShowPopup(true);
-  //   } catch (error) {
-  //     console.error("Error fetching attendees:", error);
-  //   }
-  // };
 
   const handleShowAttendees = async (meeting) => {
     if (!Array.isArray(meeting.addEmails) || meeting.addEmails.length === 0) {
@@ -310,6 +288,7 @@ const Booking = () => {
 
   return (
     <div className='booking-outside-container'>
+      <ToastContainer />
       <div className='booking-menu-container'>
         <Menu />
       </div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import cnnctlogo from "../assets/images/cnnctlogo.png";
 import rightLogin from "../assets/images/rightLogin.png";
 import "../styles/About.css";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
 
 const categories = [
     { name: "Sales", icon: "ri-store-2-line" },
@@ -34,7 +35,7 @@ const About = () => {
                 "http://localhost:5001/api/auth/about",
                 { username },
                 {
-                    withCredentials: true, // 🔹 Include cookies in the request
+                    withCredentials: true, // Include cookies in the request
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -43,12 +44,14 @@ const About = () => {
 
             console.log("Username Updated:", response.data);
             setSuccess("Username updated successfully!");
+            toast.success("Username updated successfully!", { position: "top-center", autoClose: 3000 });
             setError("");
 
             setTimeout(() => {
                 navigate("/meetings");
             }, 1500);
         } catch (error) {
+            toast.error("Error updating username.", { position: "top-center", autoClose: 3000 });
             console.error("Error updating username:", error.response?.data || error);
             setError(error.response?.data?.message || "Something went wrong.");
             setSuccess("");
@@ -59,6 +62,7 @@ const About = () => {
 
     return (
         <div className="about-outer-container">
+            <ToastContainer />
             <div className="about-left-container">
                 <div className="about-logo-container">
                     <img src={cnnctlogo} alt="" />

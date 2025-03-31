@@ -6,7 +6,7 @@ import Events from './Events';
 
 
 const CreateEvent = () => {
-
+//this is create Event page
 
     return (
         <div className='dashboard-outside-container'>

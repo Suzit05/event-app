@@ -3,9 +3,11 @@ import Menu from "../Components/Menu";
 import CalendarComponent from "../Components/CalenderComponent";
 import "../styles/Availability.css";
 import { FaRegCopy } from "react-icons/fa";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Availability = () => {
-  //css left for this page and setting and check once the working and then deploy😎
+  // check once the working and then deploy😎
   const [view, setView] = useState("availability"); // Default view
   const [events, setEvents] = useState([]);
   const [availability, setAvailability] = useState({
@@ -19,7 +21,7 @@ const Availability = () => {
   });
 
   useEffect(() => {
-    fetchAvailability(); // Load availability when component mounts
+    fetchAvailability();
   }, []);
 
   const fetchAvailability = async () => {
@@ -77,15 +79,17 @@ const Availability = () => {
       }
 
       const data = await response.json();
-      alert(data.message || "Availability updated successfully!");
+      toast.success(data.message || "Availability updated successfully!", { position: "top-center", autoClose: 3000 });
+
     } catch (error) {
       console.error("Error updating availability:", error);
-      alert("Failed to update availability");
+      toast.error("Failed to update Availability", { position: "top-center", autoClose: 3000 });
     }
   };
 
   return (
     <div className="avail-outside-container">
+      <ToastContainer />
       <div className="avail-menu-container">
         <Menu />
       </div>

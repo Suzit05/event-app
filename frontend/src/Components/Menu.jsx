@@ -11,8 +11,9 @@ const Menu = () => {
 
     const [hostName, setHostName] = useState(""); // Empty initially
     const [showLogout, setShowLogout] = useState(false);
-    const profileRef = useRef(null);
-
+    const profileRefDesktop = useRef(null);
+    const profileRefMobile = useRef(null);
+    const navigate = useNavigate()
 
 
 
@@ -39,12 +40,14 @@ const Menu = () => {
 
     // Handle logout
     const handleLogout = async () => {
+        console.log("logout btn clicked")
         try {
             await fetch("http://localhost:5001/api/auth/logout", {
                 method: "POST",
                 credentials: "include",
             });
             navigate("/login"); // Redirect to login after logout
+            window.location.reload();  // 🔄 Force UI to update
         } catch (error) {
             console.error("Logout failed:", error);
         }
@@ -58,7 +61,10 @@ const Menu = () => {
     // Hide logout button when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (profileRef.current && !profileRef.current.contains(event.target)) {
+            if (
+                (profileRefDesktop.current && !profileRefDesktop.current.contains(event.target)) &&
+                (profileRefMobile.current && !profileRefMobile.current.contains(event.target))
+            ) {
                 setShowLogout(false);
             }
         };
@@ -69,7 +75,7 @@ const Menu = () => {
         };
     }, []);
 
-    const navigate = useNavigate()
+
     return (
         <div>
             <div>   <div className="menu-container">
@@ -81,16 +87,28 @@ const Menu = () => {
                 <nav className="menu-nav">
 
                     <ul>
-                        <div onClick={() => navigate("/meetings")} className="active">
+                        <div
+                            onClick={() => navigate("/meetings")}
+                            className={location.pathname === "/meetings" ? "active" : ""}
+                        >
                             <i className="ri-loop-left-line"></i> Events
                         </div>
-                        <div onClick={() => navigate("/booking")}>
+                        <div
+                            onClick={() => navigate("/booking")}
+                            className={location.pathname === "/booking" ? "active" : ""}
+                        >
                             <i className="ri-calendar-line"></i> Booking
                         </div>
-                        <div onClick={() => navigate("/availability")}>
+                        <div
+                            onClick={() => navigate("/availability")}
+                            className={location.pathname === "/availability" ? "active" : ""}
+                        >
                             <i className="ri-time-line"></i> Availability
                         </div>
-                        <div onClick={() => navigate("/settings")} >
+                        <div
+                            onClick={() => navigate("/settings")}
+                            className={location.pathname === "/settings" ? "active" : ""}
+                        >
                             <i className="ri-settings-3-line"></i> Settings
                         </div>
                     </ul>
@@ -103,7 +121,7 @@ const Menu = () => {
                     <i className="ri-add-line"></i> Create
                 </button>
 
-                <div className="menu-profile" onClick={toggleLogout} ref={profileRef}>
+                <div className="menu-profile" onClick={toggleLogout} ref={profileRefDesktop}>
                     <img src={userdp} alt="User" className="profile-img" />
                     <span className="profile-name">{hostName}</span>
 
@@ -117,20 +135,31 @@ const Menu = () => {
             </div>
             <div className="mobile-menu-container">
                 <div className="mob-list">
-                <div onClick={() => navigate("/meetings")} className="active">
-                            <i className="ri-loop-left-line"></i> Events
-                        </div>
-                        <div onClick={() => navigate("/booking")}>
-                            <i className="ri-calendar-line"></i> Booking
-                        </div>
-                        <div onClick={() => navigate("/availability")}>
-                            <i className="ri-time-line"></i> Availability
-                        </div>
-                        <div onClick={() => navigate("/settings")} >
-                            <i className="ri-settings-3-line"></i> Settings
-                        </div>
+                    <div onClick={() => navigate("/meetings")} className="active">
+                        <i className="ri-loop-left-line"></i> Events
+                    </div>
+                    <div onClick={() => navigate("/booking")}>
+                        <i className="ri-calendar-line"></i> Booking
+                    </div>
+                    <div onClick={() => navigate("/availability")}>
+                        <i className="ri-time-line"></i> Availability
+                    </div>
+                    <div onClick={() => navigate("/settings")} >
+                        <i className="ri-settings-3-line"></i> Settings
+                    </div>
                 </div>
-          
+                <div className="menu-profile" onClick={toggleLogout} ref={profileRefMobile}>
+                    <img src={userdp} alt="User" className="profile-img" />
+                    <span className="profile-name">{hostName}</span>
+
+                    {showLogout && (
+                        <button className="logout-btn" onClick={handleLogout}>
+                            Logout
+                        </button>
+                    )}
+                </div>
+
+
             </div>
         </div>
 

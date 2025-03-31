@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import rightLogin from "../assets/images/rightLogin.png";
 import cnnctlogo from "../assets/images/cnnctlogo.png";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Login = () => {
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -22,6 +25,7 @@ const Login = () => {
             );
 
             console.log("✅ Login Response:", response.data);
+            toast.success("Login successful!", { position: "top-center", autoClose: 3000 });
 
             if (response.data.token) {
                 localStorage.setItem("authToken", response.data.token);
@@ -31,6 +35,8 @@ const Login = () => {
                 setError("Invalid credentials.");
             }
         } catch (error) {
+            // ✅ Correct error message
+            toast.error("Login failed. Please try again.", { position: "top-center", autoClose: 3000 });
             console.error("🔥 Login Error:", error.response?.data || error);
             setError(error.response?.data?.message || "Invalid email or password.");
         }
@@ -40,6 +46,7 @@ const Login = () => {
 
     return (
         <div className="outer-container">
+            <ToastContainer /> {/* ✅ Include this for toasts to work */}
             <div className="left-container">
                 <div className="logo-container">
                     <img src={cnnctlogo} alt="" />

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Events.css";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
-//this is create evvent in reality
+//this is Event Component for Create Event
 
 const Events = () => {
     const [eventId, setEventId] = useState(null); // ✅ Store eventId
@@ -77,8 +79,9 @@ const Events = () => {
 
             const result = await response.json();
             if (response.ok) {
-                alert("Meeting created successfully!");
-                // ✅ Reset form fields after successful save
+                toast.success("Meeting created successfully!", { position: "top-center", autoClose: 3000 });
+
+
                 setEventTopic("");
                 setPassword("");
                 setDescription("");
@@ -91,16 +94,20 @@ const Events = () => {
                 setaddEmails("");
 
             } else {
-                alert("Error: " + result.message);
+                toast.error("Error: " + result.message, { position: "top-center", autoClose: 3000 });
+
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Failed to create meeting.");
+            toast.error("Failed to create meeting", { position: "top-center", autoClose: 3000 });
+
+
         }
     };
 
     return (
         <div className="create-event-container">
+            <ToastContainer />
             <div className="title-div">
                 <h2 className="create-event-title">Create Event</h2>
                 <p className="create-event-subtitle">

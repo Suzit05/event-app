@@ -5,6 +5,8 @@ import { FaRegEdit, FaTrash } from "react-icons/fa";
 import { IoCopyOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { IoIosAlert } from "react-icons/io";
+import { toast, ToastContainer } from 'react-toastify';  // Import toast
+import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN USERS)
     const navigate = useNavigate();
@@ -144,7 +146,7 @@ const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN
 
             // Update state to remove deleted meeting
             setMeetings(meetings.filter(meeting => meeting._id !== id));
-            alert("Meeting deleted successfully!");
+            toast.success("Message deleted successfully!", { position: "top-center", autoClose: 3000 });
         } catch (error) {
             console.error("Error deleting meeting:", error.message);
         }
@@ -171,6 +173,7 @@ const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN
 
     return (
         <div className="meetings-outside-container">
+            <ToastContainer />
             <div className="meetings-menu-container">
                 <Menu />
             </div>
