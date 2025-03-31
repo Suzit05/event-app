@@ -3,7 +3,7 @@ const dotenv = require("dotenv")
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.route");
 const meetingRoutes = require("./routes/meeting.route")
-const availRoutes = require("./routes/avail.route")
+
 const userRoutes = require("./routes/user.route")
 const connectDB = require("./lib/db");
 
@@ -26,7 +26,7 @@ const PORT = process.env.PORT
 
 app.use("/api/auth", authRoutes)
 app.use("/api/meeting", meetingRoutes)
-app.use("/api/avail", availRoutes) //ye avail wala pr dhyn dena
+
 app.use("/api/user", userRoutes)
 
 

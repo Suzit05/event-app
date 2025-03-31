@@ -4,8 +4,9 @@ import "../styles/Meetings.css";
 import { FaRegEdit, FaTrash } from "react-icons/fa";
 import { IoCopyOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { IoIosAlert } from "react-icons/io";
 
-const Meetings = () => {
+const Meetings = () => {  //this is the real Events PAGE (HOMEPAGE FOR LOGGED IN USERS)
     const navigate = useNavigate();
     const [meetings, setMeetings] = useState([]);
     const [editingId, setEditingId] = useState(null);
@@ -149,6 +150,24 @@ const Meetings = () => {
         }
     };
 
+    // ✅ Function to find meetings with the same start time
+    const findConflictingMeetings = () => {
+        const conflicts = {};
+        meetings.forEach((meeting, index) => {
+            const { startTime, date } = meeting;
+            const key = `${date}-${startTime}`; // Unique key using date and time
+
+            if (!conflicts[key]) {
+                conflicts[key] = [];
+            }
+            conflicts[key].push(index);
+        });
+
+        return conflicts;
+    };
+
+    const conflicts = findConflictingMeetings();
+
 
     return (
         <div className="meetings-outside-container">
@@ -176,13 +195,17 @@ const Meetings = () => {
                             meetings.map((meeting) => {
                                 const isToggledOn = toggleStates[meeting._id]; // Get current toggle state
                                 const borderColor = isToggledOn ? "#1877F2" : "#ccc"; // Blue when ON, Red when OFF
+                                const hasConflict = conflicts[`${meeting.date}-${meeting.startTime}`]?.length > 1; // ✅ Check if this meeting has conflicts
                                 return (
                                     <div
                                         key={meeting._id}
                                         className="meeting-card"
                                         style={{ borderTopColor: borderColor }}
                                     >
+                                        {/* ✅ Conflict Notification */}
+                                        {hasConflict && <div className="conflict-warning"><IoIosAlert /> <h5>Conflict of timing</h5></div>}
                                         <div className="meeting-header">
+
                                             {editingId === meeting._id ? (
                                                 <>
                                                     <input
@@ -193,6 +216,7 @@ const Meetings = () => {
                                                     />
                                                 </>
                                             ) : (
+
                                                 <h3>{meeting.eventTopic}</h3>
                                             )}
                                             <FaRegEdit className="edit-icon" onClick={() => handleEditClick(meeting)} />

@@ -112,6 +112,7 @@ const Events = () => {
                 <h3 className="event-header">Add Event</h3>
 
                 <div className="form-group">
+
                     <label>Event Topic <span className="required">*</span></label>
                     <input
                         type="text"

@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "../styles/Availability.css"
-import Menu from '../Components/Menu'
+import React, { useState, useEffect } from "react";
+import Menu from "../Components/Menu";
+import CalendarComponent from "../Components/CalenderComponent";
+import "../styles/Availability.css";
 import { FaRegCopy } from "react-icons/fa";
 
-const localizer = momentLocalizer(moment);
-
 const Availability = () => {
-
+  //css left for this page and setting and check once the working and then deploy😎
   const [view, setView] = useState("availability"); // Default view
   const [events, setEvents] = useState([]);
   const [availability, setAvailability] = useState({
@@ -19,14 +15,13 @@ const Availability = () => {
     Wed: { checked: false, slots: [["", ""]] },
     Thu: { checked: false, slots: [["", ""]] },
     Fri: { checked: false, slots: [["", ""]] },
-    Sat: { checked: false, slots: [["", ""]] }
+    Sat: { checked: false, slots: [["", ""]] },
   });
 
   useEffect(() => {
     fetchAvailability(); // Load availability when component mounts
   }, []);
 
-  // Fetch User Availability from Backend
   const fetchAvailability = async () => {
     try {
       const response = await fetch("http://localhost:5001/api/user/get-avail", {
@@ -51,18 +46,16 @@ const Availability = () => {
     }
   };
 
-  // Update User Availability in Backend
   const updateAvailability = async () => {
-    // Filter out empty or incomplete slots
     const formattedAvailability = Object.entries(availability)
       .filter(([_, { checked }]) => checked)
       .flatMap(([day, { slots }]) =>
         slots
-          .filter(([start, end]) => start && end) // Only include complete slots
+          .filter(([start, end]) => start && end)
           .map(([startTime, endTime]) => ({
             day,
             startTime,
-            endTime
+            endTime,
           }))
       );
 
@@ -89,39 +82,6 @@ const Availability = () => {
       console.error("Error updating availability:", error);
       alert("Failed to update availability");
     }
-  };
-  const handleCheckboxChange = (day) => {
-    setAvailability((prev) => ({
-      ...prev,
-      [day]: { ...prev[day], checked: !prev[day].checked },
-    }));
-  };
-
-  const handleTimeChange = (day, index, type, value) => {
-    const updatedSlots = [...availability[day].slots];
-    updatedSlots[index][type === "start" ? 0 : 1] = value;
-
-    setAvailability((prev) => ({
-      ...prev,
-      [day]: { ...prev[day], slots: updatedSlots },
-    }));
-  };
-
-  const addSlot = (day) => {
-    setAvailability((prev) => ({
-      ...prev,
-      [day]: { ...prev[day], slots: [...prev[day].slots, ["", ""]] },
-    }));
-  };
-
-  const removeSlot = (day, index) => {
-    setAvailability((prev) => ({
-      ...prev,
-      [day]: {
-        ...prev[day],
-        slots: prev[day].slots.filter((_, i) => i !== index),
-      },
-    }));
   };
 
   return (
@@ -152,14 +112,23 @@ const Availability = () => {
           {view === "availability" ? (
             <div className="availability-card">
               <div className="availability-header">
-                <span className="activity">Activity <span className="dropdown">▼ Event type</span></span>
-                <span className="timezone">Time Zone <span className="dropdown">▼ Indian Time Standard</span></span>
+                <span className="activity">
+                  Activity <span className="dropdown">▼ Event type</span>
+                </span>
+                <span className="timezone">
+                  Time Zone <span className="dropdown">▼ Indian Time Standard</span>
+                </span>
               </div>
 
               <div className="availability-list">
                 {Object.entries(availability).map(([day, { checked, slots }]) => (
                   <div className="day-row" key={day}>
-                    <input type="checkbox" checked={checked} onChange={() => handleCheckboxChange(day)} />
+                    <input type="checkbox" checked={checked} onChange={() => {
+                      setAvailability((prev) => ({
+                        ...prev,
+                        [day]: { ...prev[day], checked: !prev[day].checked },
+                      }));
+                    }} />
                     <span className="day-name">{day}</span>
 
                     {checked ? (
@@ -169,16 +138,37 @@ const Availability = () => {
                             <input
                               type="time"
                               value={slot[0]}
-                              onChange={(e) => handleTimeChange(day, index, "start", e.target.value)}
+                              onChange={(e) => {
+                                const updatedSlots = [...availability[day].slots];
+                                updatedSlots[index][0] = e.target.value;
+                                setAvailability((prev) => ({
+                                  ...prev,
+                                  [day]: { ...prev[day], slots: updatedSlots },
+                                }));
+                              }}
                             />
                             <span>-</span>
                             <input
                               type="time"
                               value={slot[1]}
-                              onChange={(e) => handleTimeChange(day, index, "end", e.target.value)}
+                              onChange={(e) => {
+                                const updatedSlots = [...availability[day].slots];
+                                updatedSlots[index][1] = e.target.value;
+                                setAvailability((prev) => ({
+                                  ...prev,
+                                  [day]: { ...prev[day], slots: updatedSlots },
+                                }));
+                              }}
                             />
-                            <button className="remove-btn" onClick={() => removeSlot(day, index)}>✖</button>
-                            <button className="add-btn" onClick={() => addSlot(day)}>➕</button>
+                            <button className="remove-btn" onClick={() => {
+                              setAvailability((prev) => ({
+                                ...prev,
+                                [day]: {
+                                  ...prev[day],
+                                  slots: prev[day].slots.filter((_, i) => i !== index),
+                                },
+                              }));
+                            }}>✖</button>
                             <button><FaRegCopy /></button>
                           </div>
                         ))}
@@ -190,46 +180,17 @@ const Availability = () => {
                 ))}
               </div>
 
-              <button className="save-btn" onClick={updateAvailability}>Save Availability</button>
+              <button className="save-btn" onClick={updateAvailability}>
+                Save Availability
+              </button>
             </div>
           ) : (
-            <div className="calendar-view">
-              <div className="calendar-header">
-                <span className="activity">
-                  Activity <span className="dropdown">▼ Event type</span>
-                </span>
-                <span className="timezone">
-                  Time Zone <span className="dropdown">▼ Indian Time Standard</span>
-                </span>
-              </div>
-              <div className="calendar-container">
-                <Calendar
-                  localizer={localizer}
-                  events={events}
-                  startAccessor="start"
-                  endAccessor="end"
-                  selectable
-                  onSelectSlot={(slotInfo) => {
-                    const title = window.prompt("Enter Event Title:");
-                    if (title) {
-                      setEvents([...events, { start: slotInfo.start, end: slotInfo.end, title }]);
-                    }
-                  }}
-                  onSelectEvent={(event) => {
-                    const newTitle = window.prompt("Edit Event Title:", event.title);
-                    if (newTitle) {
-                      setEvents(events.map((e) => (e === event ? { ...e, title: newTitle } : e)));
-                    }
-                  }}
-                  style={{ height: 500 }}
-                />
-              </div>
-            </div>
+            <CalendarComponent events={events} setEvents={setEvents} />
           )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Availability
+export default Availability;

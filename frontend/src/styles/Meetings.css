@@ -37,6 +37,22 @@
     padding: 20px;
 }
 
+.conflict-warning {
+    display: flex;
+    border-radius: 14px;
+    width: fit-content;
+    padding: 4px;
+    border: 2px solid gainsboro;
+    border-bottom: 2px solid red;
+    margin-top: 0;
+    font-size: 1.5vh;
+
+}
+
+
+
+
+
 .meetings-title {
     font-size: 24px;
     font-weight: bold;
@@ -189,7 +205,7 @@ input:checked+.slider:before {
     .meetings-outside-container {
 
         background-color: #f3f3f1;
-     
+
         width: 100vw;
         height: 100vh;
     }
@@ -237,6 +253,8 @@ input:checked+.slider:before {
         font-size: 20px;
         font-weight: bold;
     }
+
+
 
     .meetings-subtitle {
         display: none;
