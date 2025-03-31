@@ -18,8 +18,9 @@ const Login = () => {
         e.preventDefault();
 
         try {
+            const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
             const response = await axios.post(
-                "http://localhost:5001/api/auth/login",
+                `${API_BASE_URL}/api/auth/login`,
                 { email, password },
                 { withCredentials: true }
             );
