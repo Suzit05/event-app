@@ -13,10 +13,13 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors({
-    origin: ["http://localhost:5173", "https://event-app-9djv.onrender.com"], // Your frontend URL
-    credentials: true
+    origin: ["http://localhost:5173", "https://event-app-pearl-iota.vercel.app", "https://event-app-git-main-suzit05s-projects.vercel.app"], // Allow both local and deployed frontend
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
 }));
 
+app.options("*", cors());  // Handle preflight requests
 
 app.use(express.json())
 app.use(cookieParser())
