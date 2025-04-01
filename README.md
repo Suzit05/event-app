@@ -2,7 +2,7 @@
 
 # CNNCT: 🗓️ Event Management & Meeting Scheduling Platform  
 
-![Meeting Scheduler](https://event-app-pearl-iota.vercel.app/)
+link--      https://event-app-pearl-iota.vercel.app/
 
 ## 🚀 Introduction  
 This is a **full-stack** meeting scheduling platform that enables users to seamlessly **create, manage, and schedule meetings** with integrated authentication. Built using **Node.js, Express, MongoDB, and Vercel**, the platform ensures a smooth and efficient user experience.  
