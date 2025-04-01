@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';  // Import CSS
 
 const Booking = () => {
 
+  //booking dekho, git update kro...fir check kro
+
 
   const [activeTab, setActiveTab] = useState("upcoming");
   const [meetings, setMeetings] = useState([]);
@@ -19,7 +21,7 @@ const Booking = () => {
 
 
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://event-app-9djv.onrender.com";
-  
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {

@@ -10,7 +10,8 @@ const generateToken = (userId, res) => {
         maxAge: 30 * 24 * 60 * 60 * 1000, // ms, 30 days
         httpOnly: true, // prevent XSS attacks
         sameSite: "none", // cross-site cookie (must be lowercase)
-        secure: true // required for SameSite=none
+        secure: true,// required for SameSite=none
+        partitioned: true // 👈 Add this
     }) //token cookie m dala gya
 
     return token;

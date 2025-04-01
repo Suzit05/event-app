@@ -12,6 +12,8 @@ dotenv.config()
 const app = express();
 const cors = require("cors");
 
+
+
 app.use(cors({
     origin: ["http://localhost:5173", "https://event-app-pearl-iota.vercel.app", "https://event-app-git-main-suzit05s-projects.vercel.app"], // Allow both local and deployed frontend
     credentials: true,
